@@ -195,6 +195,21 @@
 	  margin-top:0px;
 	}
 
+	.scale_dot {
+		position: absolute;
+		background-color:green;
+		height:10px;
+		width:10px;
+		border-radius: 10px;
+		z-index: 100;
+		bottom:10%;
+		left:38%;
+		display: block;
+	}
+	span .scale_dot {
+		left:25%;
+	}
+
 	.clear {
 	  clear:both;
 	}
@@ -218,7 +233,12 @@
 	.selected {
 		background:#3399FF !important;
 	}
-
+	span {
+		color:white;
+	}
+	#controls {
+		padding-top: 100px;
+	}
 </style>
 <script>
 	$(function(){
@@ -243,7 +263,6 @@
 			{'letter':'p', 'key_code':80, 'key':'D#', 	'sound' : '_D-sharp',	'octave_diff': 1},
 			{'letter':';', 'key_code':186, 'key':'E', 	'sound' : '_E',			'octave_diff': 1},
 			{'letter':'\'', 'key_code':222, 'key':'F', 	'sound' : '_F',			'octave_diff': 1}
-
 		];
 
 		var current_octave = 2;
@@ -312,29 +331,6 @@
 		    	x = false; 
 		    }
 		},this);
-		
-
-		var channel_max = 100;
-		audiochannels = new Array();
-		for (a=0;a<channel_max;a++) {									// prepare the channels
-			audiochannels[a] = new Array();
-			audiochannels[a]['channel'] = new Audio();						// create a new audio object
-			audiochannels[a]['finished'] = -1;							// expected end time for this channel
-		}
-
-		function play_multi_sound(s) {
-			console.log(s);
-			for (a=0;a<audiochannels.length;a++) {
-				thistime = new Date();
-				if (audiochannels[a]['finished'] < thistime.getTime()) {			// is this channel finished?
-					audiochannels[a]['finished'] = thistime.getTime() + document.getElementById(s).duration*600;
-					audiochannels[a]['channel'].src = document.getElementById(s).src;
-					audiochannels[a]['channel'].load();
-					audiochannels[a]['channel'].play();
-					break;
-				}
-			}
-		}
 
 		for(index = 0; index <= 5; index++)
 		{
@@ -350,7 +346,78 @@
 			var appendDiv = jQuery($('#piano div[octave|="'+x+'"]')[0].outerHTML);
 			appendDiv.attr('octave', ++octave).insertAfter('#piano div[octave|="'+x+'"]');
 		}
+
+		get_scale();
+		
 	});	
+
+
+var channel_max = 100;
+audiochannels = new Array();
+for (a=0;a<channel_max;a++) {									// prepare the channels
+	audiochannels[a] = new Array();
+	audiochannels[a]['channel'] = new Audio();						// create a new audio object
+	audiochannels[a]['finished'] = -1;							// expected end time for this channel
+}
+
+function play_multi_sound(s) {
+	for (a=0;a<audiochannels.length;a++) {
+		thistime = new Date();
+		if (audiochannels[a]['finished'] < thistime.getTime()) {			// is this channel finished?
+			audiochannels[a]['finished'] = thistime.getTime() + document.getElementById(s).duration*600;
+			audiochannels[a]['channel'].src = document.getElementById(s).src;
+			audiochannels[a]['channel'].load();
+			audiochannels[a]['channel'].play();
+			break;
+		}
+	}
+}	
+
+function get_scale()
+{
+	$(scales).each(function(key,value)
+	{
+		if (value.type === 'major') 
+		{
+			$('#scale_list optgroup#major').append('<option value="'+value.name+'">'+value.name+'</option');
+
+		} 
+		if (value.type === 'minor')
+		{
+			$('#scale_list optgroup#minor').append('<option value="'+value.name+'">'+value.name+'</option');			
+		}
+
+	});
+}
+
+function set_scale()
+{
+	var selected_scale = $('#scale_list').find(":selected").text();
+	
+	$('.scale_dot').remove(); // clear the dots before we select a scale
+	
+	$(scales).each(function(key,value)
+	{
+		$(value).each(function(key, value)
+		{
+			if (value.name === selected_scale)
+		{
+			$(value.keys).each(function(k,v) 
+			{
+				//$('<div class="scale_dot"></div>').appendTo($('#piano').find("[key|='"+v+"'']"));
+				$('#piano').find("[key|='"+v+"'],[alt-key|='"+v+"']").html('<div class="scale_dot"></div>'); // comma allows us to use either the key or the alt-key values if available
+			});
+		} 
+		else 
+		{
+			return false; // no scale found... for some reason
+		}
+			
+		})
+
+		
+	});
+}
 
 </script>
 <body>
@@ -359,15 +426,24 @@
 	<div id="p-wrapper">
 		<ul id="piano">
 			<div octave="0">
-				<li><div class="anchor" key="C"></div></li>
-				<li><div class="anchor" key="D"></div><span 	key="C#"></span></li>
-				<li><div class="anchor" key="E"></div><span 	key="D#"></span></li>
-				<li><div class="anchor" key="F"></div></li>
-				<li><div class="anchor" key="G"></div><span 	key="F#"></span></li>
-				<li><div class="anchor" key="A"></div><span 	key="G#"></span></li>
-				<li><div class="anchor" key="B"></div><span 	key="A#"></span></li>
+				<li><div class="anchor" key="C" alt-key="B#"></div></li>
+				<li><div class="anchor" key="D"></div><span key="C#" alt-key="Db"></span></li>
+				<li><div class="anchor" key="E" alt-key="Fb"></div><span key="D#" alt-key="Eb"></span></li>
+				<li><div class="anchor" key="F" alt-key="E#"></div></li>
+				<li><div class="anchor" key="G"></div><span key="F#" alt-key="Gb"></span></li>
+				<li><div class="anchor" key="A"></div><span key="G#" alt-key="Ab"></span></li>
+				<li><div class="anchor" key="B" alt-key="Cb"></div><span key="A#" alt-key="Bb"></span></li>
 			</div>
 		</ul>
+	</div>
+	<div id="controls">
+		<select id="scale_list" onchange="set_scale(); return false;">
+			<option></option>
+			<optgroup id="major" label="Major">
+			</optgroup>
+			<optgroup id="minor" label="Minor">
+			</optgroup>
+		</select>
 	</div>
 </div>
 
