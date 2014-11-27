@@ -328,7 +328,7 @@
 		}
 		get_scale();
 
-		$("#piano div li div, #piano div li span").on("click", function(){click_play(this)}); // click the notes to play them
+		$("#piano div li div, #piano div li span").on("mousedown", function(){click_play(this)}); // click the notes to play them
 	});	
 
 function click_play(obj_this)
