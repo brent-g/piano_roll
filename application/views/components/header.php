@@ -2,7 +2,7 @@
 <html lang="en" ng-app>
 <head>
 	<meta charset="utf-8">
-	<title>Welcome to CodeIgniter</title>
+	<title>Piano Roll</title>
 	<meta name="description" content="">
 	<meta name="keywords" content="">
 	<meta name="author" content="Brent Godsoe">
@@ -13,5 +13,6 @@
 	<!-- <link rel="stylesheet" type="text/css" href="<?php echo site_url('assets'); ?>/css/main.css"/> -->
 	<script type="text/javascript" src="<?php echo site_url('assets'); ?>/js/jquery.js"></script>
 	<script type="text/javascript" src="<?php echo site_url('assets'); ?>/js/scales.js"></script>
+	<script type="text/javascript" src="<?php echo site_url('assets'); ?>/js/note.js"></script>
 	<!-- <script type="text/javascript" src="<?php echo site_url('assets'); ?>/js/angular.min.js"></script> -->
 </head>

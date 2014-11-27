@@ -241,31 +241,9 @@
 	}
 </style>
 <script>
+	var current_octave = 2;
+
 	$(function(){
-
-		var note = [
-			{'letter':'a', 'key_code':65, 'key':'C', 	'sound' : '_C', 		'octave_diff': 0},
-			{'letter':'w', 'key_code':87, 'key':'C#', 	'sound' : '_C-sharp', 	'octave_diff': 0},
-			{'letter':'s', 'key_code':83, 'key':'D', 	'sound' : '_D', 		'octave_diff': 0},
-			{'letter':'e', 'key_code':69, 'key':'D#', 	'sound' : '_D-sharp', 	'octave_diff': 0},
-			{'letter':'d', 'key_code':68, 'key':'E', 	'sound' : '_E', 		'octave_diff': 0},
-			{'letter':'f', 'key_code':70, 'key':'F', 	'sound' : '_F', 		'octave_diff': 0},
-			{'letter':'t', 'key_code':84, 'key':'F#', 	'sound' : '_F-sharp', 	'octave_diff': 0},
-			{'letter':'g', 'key_code':71, 'key':'G', 	'sound' : '_G', 		'octave_diff': 0},
-			{'letter':'y', 'key_code':89, 'key':'G#', 	'sound' : '_G-sharp', 	'octave_diff': 0},
-			{'letter':'h', 'key_code':72, 'key':'A', 	'sound' : '_A', 		'octave_diff': 0},
-			{'letter':'u', 'key_code':85, 'key':'A#', 	'sound' : '_A-sharp', 	'octave_diff': 0},
-			{'letter':'j', 'key_code':74, 'key':'B', 	'sound' : '_B', 		'octave_diff': 0},
-			
-			{'letter':'k', 'key_code':75, 'key':'C', 	'sound' : '_C',			'octave_diff': 1},
-			{'letter':'o', 'key_code':79, 'key':'C#', 	'sound' : '_C-sharp',	'octave_diff': 1},
-			{'letter':'l', 'key_code':76, 'key':'D', 	'sound' : '_D', 		'octave_diff': 1},
-			{'letter':'p', 'key_code':80, 'key':'D#', 	'sound' : '_D-sharp',	'octave_diff': 1},
-			{'letter':';', 'key_code':186, 'key':'E', 	'sound' : '_E',			'octave_diff': 1},
-			{'letter':'\'', 'key_code':222, 'key':'F', 	'sound' : '_F',			'octave_diff': 1}
-		];
-
-		var current_octave = 2;
 		var key_down = {};
 		$(document).on({
 		    "keydown": function(e) 
@@ -282,7 +260,6 @@
 					{
 						return false;
 					}
-
 				} 
 				
 				// Increase Octave
@@ -313,30 +290,33 @@
     						}
     					}
     				});
-					x = true; 
 				}
 			},
 		    "keyup": function(e) 
 		    { 
-    				$(note).each(function(k,value) 
-    				{
-    					if(e.keyCode === value.key_code) 
-    					{
-    						var note_octave = current_octave + value.octave_diff;
-    						$("#piano [octave|="+note_octave+"] li div[key|="+value.key+"]").removeClass('selected');
-    						$("#piano [octave|="+note_octave+"] li span[key|="+value.key+"]").removeClass('selected');
-    						key_down[value.key_code] = null;
-    					}
-    				});
-		    	x = false; 
+				$(note).each(function(k,value) 
+				{
+					if(e.keyCode === value.key_code) 
+					{
+						var note_octave = current_octave + value.octave_diff;
+						$("#piano [octave|="+note_octave+"] li div[key|="+value.key+"]").removeClass('selected');
+						$("#piano [octave|="+note_octave+"] li span[key|="+value.key+"]").removeClass('selected');
+						key_down[value.key_code] = null;
+					}
+				});
 		    }
 		},this);
+
+		$("#piano .anchor").each(function(k,v) 
+		{
+			console.log(this);
+		});
 
 		for(index = 0; index <= 5; index++)
 		{
 			$(note).each(function(key, value)
 			{
-					$('body').prepend('<audio id="'+index+value.sound+'" src="<?php echo site_url('assets'); ?>/sound/'+index+value.sound+'.mp3" preload=\"auto\"></audio>');
+				$('body').prepend('<audio id="'+index+value.sound+'" src="<?php echo site_url('assets'); ?>/sound/'+index+value.sound+'.mp3" preload=\"auto\"></audio>');
 			});
 		}
 
@@ -346,11 +326,30 @@
 			var appendDiv = jQuery($('#piano div[octave|="'+x+'"]')[0].outerHTML);
 			appendDiv.attr('octave', ++octave).insertAfter('#piano div[octave|="'+x+'"]');
 		}
-
 		get_scale();
-		
+
+		$("#piano div li div, #piano div li span").on("click", function(){click_play(this)}); // click the notes to play them
 	});	
 
+function click_play(obj_this)
+{
+	var this_octave = $(obj_this).parents('div').attr('octave');
+	var this_key = $(obj_this).attr('key');
+	//console.log(this_octave, this_key);
+
+	
+	$(note).each(function(k, value)
+	{
+		if (value.key === this_key && value.octave_diff === 0)
+		{
+			//console.log(this_octave,value.sound)
+			play_multi_sound(this_octave+value.sound);
+		}
+		//console.log(value);
+		//console.log(note_octave,value.sound);
+		//play_multi_sound(note_octave+value.sound);
+	});
+}
 
 var channel_max = 100;
 audiochannels = new Array();
