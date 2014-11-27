@@ -239,11 +239,64 @@
 	#controls {
 		padding-top: 100px;
 	}
+
 </style>
 <script>
 	var current_octave = 2;
+	var sound_volume = 1;
 
 	$(function(){
+
+		//Store frequently elements in variables
+		var slider  = $('#slider');
+		var tooltip = $('.tooltip');
+
+		//Hide the Tooltip at first
+		tooltip.hide();
+
+		//Call the Slider
+		slider.slider({
+			//Config
+			range: "min",
+			min: 0,
+			value: 100,
+
+			start: function(event,ui) {
+			    tooltip.fadeIn('fast');
+			},
+
+			//Slider Event
+			slide: function(event, ui) { //When the slider is sliding
+
+				var value  = slider.slider('value');
+				var volume = $('.volume');
+				sound_volume = (value / 100);
+				console.log(value);
+				tooltip.css('left', value).text(ui.value);  //Adjust the tooltip accordingly
+				if (value <= 1) {
+					sound_volume = 0;
+				}
+				else if (value <= 5) { 
+					volume.css('background-position', '0 0');
+				} 
+				else if (value <= 25) {
+					volume.css('background-position', '0 -25px');
+				} 
+				else if (value <= 75) {
+					volume.css('background-position', '0 -50px');
+				} 
+				else {
+					volume.css('background-position', '0 -75px');
+				};
+
+			},
+
+			stop: function(event,ui) {
+			    tooltip.fadeOut('fast');
+			},
+		});
+
+
 		var key_down = {};
 		$(document).on({
 		    "keydown": function(e) 
@@ -307,11 +360,6 @@
 		    }
 		},this);
 
-		$("#piano .anchor").each(function(k,v) 
-		{
-			console.log(this);
-		});
-
 		for(index = 0; index <= 5; index++)
 		{
 			$(note).each(function(key, value)
@@ -366,6 +414,7 @@ function play_multi_sound(s) {
 			audiochannels[a]['finished'] = thistime.getTime() + document.getElementById(s).duration*600;
 			audiochannels[a]['channel'].src = document.getElementById(s).src;
 			audiochannels[a]['channel'].load();
+			audiochannels[a]['channel'].volume = sound_volume;
 			audiochannels[a]['channel'].play();
 			break;
 		}
@@ -417,10 +466,8 @@ function set_scale()
 		
 	});
 }
-
 </script>
 <body>
-
 <div id="container">
 	<div id="p-wrapper">
 		<ul id="piano">
@@ -443,6 +490,11 @@ function set_scale()
 			<optgroup id="minor" label="Minor">
 			</optgroup>
 		</select>
+		<section>	
+			<span class="tooltip"></span> 
+			<div id="slider"></div>
+			<span class="volume"></span>
+		</section>
 	</div>
 </div>
 
