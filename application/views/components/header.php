@@ -11,11 +11,13 @@
 	<!-- <link rel="shortcut icon" href="<?php echo site_url('assets'); ?>/images/favicon.ico" type="image/x-icon" /> -->
 	<!-- <link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Titillium+Web' /> -->
 	<!-- <link rel="stylesheet" type="text/css" href="<?php echo site_url('assets'); ?>/css/main.css"/> -->
-	<link rel="stylesheet" type="text/css" href="<?php echo site_url('assets'); ?>/css/slider.css"/>
+	<link rel="stylesheet" type="text/css" href="<?php echo site_url('assets'); ?>/css/piano.css"/>
+	<link rel="stylesheet" type="text/css" href="<?php echo site_url('assets'); ?>/css/foundation.css"/>
 	<script type="text/javascript" src="<?php echo site_url('assets'); ?>/js/jquery.js"></script>
 	<script type="text/javascript" src="<?php echo site_url('assets'); ?>/js/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="<?php echo site_url('assets'); ?>/js/scales.js"></script>
 	<script type="text/javascript" src="<?php echo site_url('assets'); ?>/js/note.js"></script>
+	<script type="text/javascript" src="<?php echo site_url('assets'); ?>/js/vendor/modernizr.js"></script>
 	
 	<!-- <script type="text/javascript" src="<?php echo site_url('assets'); ?>/js/angular.min.js"></script> -->
 </head>
