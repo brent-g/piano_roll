@@ -258,14 +258,14 @@ function toggle_keyboard()
 <body>
 	<nav class="top-bar">
 		<ul class="title-area">
-			<li class="name"><h1><a href="#">Chord Machine!</a></h1></li>
+			<li class="name"><h1><a href="#">Piano Roll</a></h1></li>
 		</ul>
 
 		<section class="top-bar-section">
 			<ul class="right">
 				<li><a href="#">Home</a></li>
 				<li><a href="#">About</a></li>
-				<li><a href="#">Stuff</a></li>
+				<li><a href="https://github.com/brent-g/" target="_blank">My GitHub</a></li>
 			</ul>
 		</section>
 	</nav>
