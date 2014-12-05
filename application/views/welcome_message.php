@@ -23,6 +23,10 @@
 	#container {
 		overflow: auto;
 	}
+
+	fieldset {
+		background-color: #f2f2f2;
+	}
 </style>
 <script>
 	// default values
@@ -143,20 +147,6 @@ function keyboard_init()
 	},this);
 }
 
-function click_play(obj_this)
-{
-	var this_octave = $(obj_this).parents('div').attr('octave');
-	var this_key = $(obj_this).attr('key');
-	
-	$(note).each(function(k, value)
-	{
-		if (value.key === this_key && value.octave_diff === 0)
-		{
-			play_multi_sound(this_octave+value.sound);
-		}
-	});
-}
-
 var channel_max = 100;
 audiochannels = new Array();
 for (a=0;a<channel_max;a++) {									// prepare the channels
@@ -179,6 +169,21 @@ function play_multi_sound(s) {
 	}
 }	
 
+function click_play(obj_this)
+{
+	var this_octave = $(obj_this).parents('div').attr('octave');
+	var this_key = $(obj_this).attr('key');
+	
+	$(note).each(function(k, value)
+	{
+		if (value.key === this_key && value.octave_diff === 0)
+		{
+			play_multi_sound(this_octave+value.sound);
+		}
+	});
+}
+
+
 function get_keys()
 {
 	var key_list = new Array();
@@ -191,10 +196,10 @@ function get_keys()
 			$('#key_list').append('<option value="'+value.key+'">'+value.key+'</option');
 			key_list.push(value.key);
 		} 
-		// else
-		// {
-		// 	return false;
-		// }
+		else
+		{
+			return false;
+		}
 	});
 }
 
@@ -249,9 +254,23 @@ function set_octave()
 	current_octave = octave_list_value;
 }
 
+function set_color()
+{
+
+}
+
 function toggle_keyboard()
 {
 	keyboard_control = $('#keyboard_checkbox').is(':checked');
+
+	if (keyboard_control == false)
+	{
+		$('#octave_list').prop('disabled', true);
+	}
+	else
+	{
+		$('#octave_list').prop('disabled', false);
+	}
 }
 
 </script>
@@ -296,56 +315,69 @@ function toggle_keyboard()
 
     <br />
 
-    <div class="row panel">
+    <div class="row">
+	    <fieldset>
+			
+			<legend>Options</legend>
 
-		<div class="large-2 columns">
-			<h5>Key</h5>
-			<select id="key_list" onchange="set_key(); return false;">
-				<option>None</option>
-			</select>
-		</div>
-
-		<div class="large-2 columns">
-			<h5>Scale</h5>
-			<select id="scale_list" onchange="set_scale(); return false;">
-				<option>None</option>
-				<optgroup id="major" label="Major">
-				</optgroup>
-				<optgroup id="minor" label="Minor">
-				</optgroup>
-			</select>
-		</div>
-		
-		<div class="large-2 columns">
-			<h5>Keyboard</h5>
-			<div class="switch round">
-			  <input id="keyboard_checkbox" type="checkbox" checked="checked" onchange="toggle_keyboard();">
-			  <label for="keyboard_checkbox"></label>
-			</div> 
-		</div>
-		
-		<div class="large-2 columns">
-			<h5>Octave</h5>
-			<select id="octave_list" style="width:40px;" onchange="set_octave(); return false;">
-				<option>0</option>
-				<option>1</option>
-				<option selected>2</option>
-				<option>3</option>
-				<option>4</option>
-			</select>
-		</div>
-
-		<div class="large-2 columns">
-			<h5>Scale Colour</h5>
-		</div>
-
-		<div class="large-2 columns">
-			<h5>Volume</h5>
-			<div class="range-slider" data-slider="100">
-				<span class="range-slider-handle" aria-valuemin="0" aria-valuemax="100" aria-valuenow="44" style="-webkit-transform: translateX(397.64px); transform: translateX(397.64px);"></span>
+			<div class="large-2 columns">
+				<h5>Key</h5>
+				<select id="key_list" onchange="set_key(); return false;">
+					<option>All</option>
+				</select>
 			</div>
-		</div>
 
+			<div class="large-2 columns">
+				<h5>Scale</h5>
+				<select id="scale_list" onchange="set_scale(); return false;">
+					<option>None</option>
+					<optgroup id="major" label="Major">
+					</optgroup>
+					<optgroup id="minor" label="Minor">
+					</optgroup>
+				</select>
+			</div>
+			
+			<div class="large-2 columns">
+				<h5>Keyboard</h5>
+				<div class="switch round">
+				  <input id="keyboard_checkbox" type="checkbox" checked="checked" onchange="toggle_keyboard();">
+				  <label for="keyboard_checkbox"></label>
+				</div> 
+			</div>
+			
+			<div class="large-2 columns">
+				<h5>Octave</h5>
+				<select id="octave_list" style="width:40px;" onchange="set_octave(); return false;">
+					<option>0</option>
+					<option>1</option>
+					<option selected>2</option>
+					<option>3</option>
+					<option>4</option>
+				</select>
+			</div>
+
+			<div class="large-2 columns">
+				<h5>Scale Color</h5>
+				<select id="colour_list"> 
+					<option value="green">Green</option>
+					<option value="red">Red</option>
+					<option value="blue">Blue</option>
+					<option value="yellow">Yellow</option>
+				</select>
+			</div>
+
+			<div class="large-2 columns">
+				<h5>Volume</h5>
+				<div class="range-slider" data-slider="100">
+					<span class="range-slider-handle" aria-valuemin="0" aria-valuemax="100" aria-valuenow="44" style="-webkit-transform: translateX(397.64px); transform: translateX(397.64px);"></span>
+				</div>
+			</div>
+		</fieldset>
+	</div>
+
+	<div class="row panel">
+		<div class="large-12 columns">
 	</div>
 
 <script src="<?php echo site_url('assets'); ?>/js/foundation.min.js"></script>
