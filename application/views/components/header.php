@@ -13,10 +13,11 @@
 	<!-- <link rel="stylesheet" type="text/css" href="<?php echo site_url('assets'); ?>/css/main.css"/> -->
 	<link rel="stylesheet" type="text/css" href="<?php echo site_url('assets'); ?>/css/piano.css"/>
 	<link rel="stylesheet" type="text/css" href="<?php echo site_url('assets'); ?>/css/foundation.css"/>
+	<link rel="stylesheet" type="text/css" href="<?php echo site_url('assets'); ?>/css/main.css"/>
 	<script type="text/javascript" src="<?php echo site_url('assets'); ?>/js/jquery.js"></script>
 	<script type="text/javascript" src="<?php echo site_url('assets'); ?>/js/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="<?php echo site_url('assets'); ?>/js/scales.js"></script>
-	<script type="text/javascript" src="<?php echo site_url('assets'); ?>/js/note.js"></script>
+	<script type="text/javascript" src="<?php echo site_url('assets'); ?>/js/circle-of-fifths.js"></script>
 	<script type="text/javascript" src="<?php echo site_url('assets'); ?>/js/vendor/modernizr.js"></script>
 	
 	<!-- <script type="text/javascript" src="<?php echo site_url('assets'); ?>/js/angular.min.js"></script> -->

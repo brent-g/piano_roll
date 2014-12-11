@@ -1,72 +1,66 @@
-	<style type="text/css">
-	:focus {
-	  outline:none !important;
-	}
-
-	a {
-	  color:indigo;
-	  text-decoration:none;
-	}
-
-	a:hover {
-	  text-decoration:underline;
-	}
-
-	.selected {
-		background:#3399FF !important;
-	}
-	
-	span {
-		color:white;
-	}
-
-	#container {
-		overflow: auto;
-	}
-
-	fieldset {
-		background-color: #f2f2f2;
-	}
-</style>
 <script>
 	// default values
 	var current_octave = 2;
 	var sound_volume = 1;
 	var keyboard_control = true;
+	var piano_key_count = 0;
+	var selected_key = null;
+	var piano_octave_count = 5;
 
-	$(function(){
-		
+	$(function() 
+	{
+		// generate the piano
+		piano_init();
+		// load the audio files
+		load_audio_samples();
+		// load the keyboard
 		keyboard_init();
-		
-		// set the sound volume value according to the slider
-		$('.range-slider').on('change', function(){
-			var slider_value = $('.range-slider').attr('data-slider');
-			// set the sound volume value to a number between 0 and 1
-			sound_volume = (slider_value / 100);
-		});
-		
-		for(index = 0; index <= 5; index++)
-		{
-			$(note).each(function(key, value)
-			{
-				$('.audio-files').prepend('<audio id="'+index+value.sound+'" src="<?php echo site_url('assets'); ?>/sound/'+index+value.sound+'.mp3" preload=\"auto\"></audio>');
-			});
-		}
-
-		var octave = 0;
-		for(x = 0; x <= 3; x++) {
-			var id = $('#piano div[octave|="0"]').attr('octave');
-			var appendDiv = jQuery($('#piano div[octave|="'+x+'"]')[0].outerHTML);
-			appendDiv.attr('octave', ++octave).insertAfter('#piano div[octave|="'+x+'"]');
-		}
-
+		// generate the audio slider		
+		volume_slider_init();
 		// generate the key list
 		get_keys();
 		// generate the scale list
 		get_scale();
-
-		$("#piano div li div, #piano div li span").on("mousedown", function(){click_play(this)}); // click the notes to play them
+		// enable mouseclick to play notes
+		click_play_init();
 	});	
+
+function piano_init()
+{
+	var octave = 0;
+	// this is where we generate the piano
+	for (x = 0; x <= piano_octave_count; x++) {
+		// a template of 1 octaves worth of keys
+		var template = '<div octave="'+x+'"><li><div class="anchor" index="'+(0+octave)+'"></div></li><li><span index="'+(1+octave)+'"></span><div class="anchor" index="'+(2+octave)+'"></div></li><li><span index="'+(3+octave)+'"></span><div class="anchor" index="'+(4+octave)+'"></div></li><li><div class="anchor" index="'+(5+octave)+'"></div></li><li><span index="'+(6+octave)+'"></span><div class="anchor" index="'+(7+octave)+'"></div></li><li><span index="'+(8+octave)+'"></span><div class="anchor" index="'+(9+octave)+'"></div></li><li><span index="'+(10+octave)+'"></span><div class="anchor" index="'+(11+octave)+'"></div></li></div>';
+		octave = octave + 12;
+		// generate the whole piano and append it to the piano id
+		$('#piano').append(template);
+		piano_key_count = octave;
+	}
+}
+
+function click_play_init()
+{
+	$("#piano div li div, #piano div li span").on("mousedown", function(){click_play(this)}); // click the notes to play them
+}
+
+function load_audio_samples()
+{
+	for(index = 0; index <= piano_key_count; index++)
+	{
+		$('.audio-files').prepend('<audio id="sample_'+index+'" src="<?php echo site_url('assets'); ?>/sound/'+index+'.mp3" preload=\"none\"></audio>');
+	}
+}
+
+function volume_slider_init()
+{
+	// set the sound volume value according to the slider
+	$('.range-slider').on('change', function(){
+		var slider_value = $('.range-slider').attr('data-slider');
+		// set the sound volume value to a number between 0 and 1
+		sound_volume = (slider_value / 100);
+	});
+}
 
 function keyboard_init()
 {
@@ -86,13 +80,13 @@ function keyboard_init()
 						current_octave--;
 						// set the octave list value to the newly changed octave value
 						$('#octave_list').val(current_octave).prop('selected', true);
+						$("#piano li div").removeClass('selected');
 					} 
 					else 
 					{
 						return false;
 					}
 				} 
-				
 				// Increase Octave
 				else if (e.keyCode === 88)
 				{
@@ -102,24 +96,44 @@ function keyboard_init()
 						current_octave++;
 						// set the octave list value to the newly changed octave value
 						$('#octave_list').val(current_octave).prop('selected', true);
+						$("#piano li div").removeClass('selected');
 					}
 					else
 					{
 						return false;
 					}
 				}
+				else if (e.keyCode === 49)
+				{
+					// if the user presses any of the fifth values
+					// $(fifths).each(function(k,value) 
+					// {
+					// 	if (e.keyCode === value.key_code) 
+					// 	{
+		
+					// 	}
+					// });
+
+				//	if (key_down[49] == null) 
+				//	{
+						var chord_name = 'C-Minor';
+						play_chords(chord_name);
+						key_down[49] = true;
+				//	}
+					
+				}
 				else 
 				{    			
-					$(note).each(function(k,value) 
+					$(notes).each(function(k,value) 
 					{
-						if(e.keyCode === value.key_code) 
+						if (e.keyCode === value.key_code) 
 						{
 							if (key_down[value.key_code] == null) 
 							{
-	    						var note_octave = (current_octave + value.octave_diff);
-	    						$("#piano [octave|="+note_octave+"] li div[key|="+value.key+"]").addClass('selected');
-	    						$("#piano [octave|="+note_octave+"] li span[key|="+value.key+"]").addClass('selected');
-	    						play_multi_sound(note_octave+value.sound);
+	    						var key_value = ((current_octave * 12) + value.offset);
+	    						$("#piano li div[index|="+key_value+"]").addClass('selected');
+	    						$("#piano li span[index|="+key_value+"]").addClass('selected');
+	    						play_multi_sound(key_value);
 	    						key_down[value.key_code] = true;
 							}
 						}
@@ -132,7 +146,18 @@ function keyboard_init()
 			// if the keyboard setting is enabled then we can play the notes
 			if (keyboard_control === true)
 			{
-				$(note).each(function(k,value) 
+				$(notes).each(function(k,value) 
+				{
+					if (e.keyCode === value.key_code) 
+					{
+						var key_value = ((current_octave * 12) + value.offset);
+						$("#piano li div[index|="+key_value+"]").removeClass('selected');
+						$("#piano li span[index|="+key_value+"]").removeClass('selected');
+						key_down[value.key_code] = null;
+					}
+				});
+
+				$(fifths).each(function(k,value) 
 				{
 					if (e.keyCode === value.key_code) 
 					{
@@ -147,6 +172,27 @@ function keyboard_init()
 	},this);
 }
 
+function play_chords(chord_name)
+{
+	$(chords).each(function(key,value)
+	{
+		if (value.name === chord_name)
+		{
+			// only play the triad chord
+			var chord = value.chord.slice(0,3);
+			$(chord).each(function(k,val) 
+			{
+				console.log(val);
+				// $(val).each(function(i,note)
+				// {
+				// 	console.log(i,note);
+				play_multi_sound(current_octave+val);
+				// });
+			});
+		} 
+	});
+}
+
 var channel_max = 100;
 audiochannels = new Array();
 for (a=0;a<channel_max;a++) {									// prepare the channels
@@ -155,13 +201,13 @@ for (a=0;a<channel_max;a++) {									// prepare the channels
 	audiochannels[a]['finished'] = -1;							// expected end time for this channel
 }
 
-function play_multi_sound(s) {
-	for (a=0;a<audiochannels.length;a++) {
+function play_multi_sound(id) {
+	for (a = 0; a < audiochannels.length; a++) {
 		thistime = new Date();
 		if (audiochannels[a]['finished'] < thistime.getTime()) {			// is this channel finished?
-			audiochannels[a]['finished'] = thistime.getTime() + document.getElementById(s).duration*600;
-			audiochannels[a]['channel'].src = document.getElementById(s).src;
-			audiochannels[a]['channel'].load();
+			audiochannels[a]['finished'] = thistime.getTime() + $('#sample_'+id).duration*600;
+			audiochannels[a]['channel'].src = $('#sample_'+id).attr('src');
+			//audiochannels[a]['channel'].load();
 			audiochannels[a]['channel'].volume = sound_volume;
 			audiochannels[a]['channel'].play();
 			break;
@@ -172,14 +218,15 @@ function play_multi_sound(s) {
 function click_play(obj_this)
 {
 	var this_octave = $(obj_this).parents('div').attr('octave');
-	var this_key = $(obj_this).attr('key');
+	var this_index = $(obj_this).attr('index');
+	var this_key = (this_octave * 12);
 	
-	$(note).each(function(k, value)
+	$(notes).each(function(k, value)
 	{
-		if (value.key === this_key && value.octave_diff === 0)
-		{
-			play_multi_sound(this_octave+value.sound);
-		}
+		var selected_key = (value.offset + this_key);
+		console.log(value.offset);
+		
+		//play_multi_sound(this_index);
 	});
 }
 
@@ -187,13 +234,13 @@ function click_play(obj_this)
 function get_keys()
 {
 	var key_list = new Array();
-	$(scales).each(function(key,value)
+	$(notes).each(function(key,value)
 	{
 		var in_array = $.inArray(value.key,key_list);
 		// add the new key to the list
 		if (in_array === -1)
 		{
-			$('#key_list').append('<option value="'+value.key+'">'+value.key+'</option');
+			$('#key_list').append('<option value="'+value.offset+'">'+value.key+'</option');
 			key_list.push(value.key);
 		} 
 		else
@@ -203,18 +250,23 @@ function get_keys()
 	});
 }
 
+function set_key()
+{
+	selected_key = parseInt($('#key_list').find(":selected").val(), 10);
+}
+
 function get_scale()
 {
 	$(scales).each(function(key,value)
 	{
 		if (value.type === 'major') 
 		{
-			$('#scale_list optgroup#major').append('<option value="'+value.name+'">'+value.name+'</option');
+			$('#scale_list').append('<option value="'+value.type+'">'+value.name+'</option');
 
 		} 
 		if (value.type === 'minor')
 		{
-			$('#scale_list optgroup#minor').append('<option value="'+value.name+'">'+value.name+'</option');			
+			$('#scale_list').append('<option value="'+value.type+'">'+value.name+'</option');			
 		}
 
 	});
@@ -222,28 +274,84 @@ function get_scale()
 
 function set_scale()
 {
-	var selected_scale = $('#scale_list').find(":selected").text();
-	
-	$('.scale_dot').remove(); // clear the dots before we select a scale
-	
-	$(scales).each(function(key,value)
+
+	var selected_scale = $('#scale_list option:selected').val();
+	// make sure the user actually selects a key
+	if (selected_key != null) 
 	{
-		$(value).each(function(key, value)
+		$('.scale_dot').remove(); // clear all dots before we select a scale
+		
+		//var key_value = ((current_octave * 12) + selected_key);
+		var fresh_scale = new Array();
+		var altered_scale = new Array();
+
+		$(scales).each(function(key,value)
 		{
-			if (value.name === selected_scale)
+			if (value.type === selected_scale)
 			{
-				$(value.keys).each(function(k,v) 
+				var octave_increment = 0;
+				for (x = 0; x <= piano_octave_count; x++)
 				{
-					//$('<div class="scale_dot"></div>').appendTo($('#piano').find("[key|='"+v+"'']"));
-					$('#piano').find("[key|='"+v+"'],[alt-key|='"+v+"']").html('<div class="scale_dot"></div>'); // comma allows us to use either the key or the alt-key values if available
-				});
-			} 
-			else 
-			{
-				return false; // no scale found... for some reason
+					console.log(octave_increment);
+					$(value.scale_offset).each(function(key,value)
+					{
+						// create a new scale with the appropriate scale and key offset 
+						fresh_scale[key] = (value + selected_key + octave_increment);
+					});
+					altered_scale.push(fresh_scale);
+					octave_increment = octave_increment + 12;
+				}
+				console.log(altered_scale);
+
+				
+
+
+
+
+
+				// var key_value = 0;
+				// // loop over all of the keys and apply the scale dot where needed!
+				// for (x = 0; x <= piano_octave_count; x++)
+				// {
+				// 	$(altered_scale).each(function(key,value)
+				// 	{
+				// 		 key_value = value;
+				// 		 altered_scale[key] = key_value;
+
+				// 	//console.log(key_value);
+				// 	});
+				// 	key_value = key_value + 12;
+				// 	//console.log('hello!');
+				// 	// $('<div class="scale_dot"></div>').appendTo($('#piano').find("[index|='"+v+"'']"));
+				// }
+				// console.log(key_value);
+
+
+
+
+
 			}
-		})
-	});
+			// $(value).each(function(key, value)
+			// {
+			// 	if (value.name === selected_scale)
+			// 	{
+			// 		$(value.keys).each(function(k,v) 
+			// 		{
+			// 			//
+			// 			$('#piano').find("[index|='"+v+"']").html('<div class="scale_dot"></div>'); // comma allows us to use either the key or the alt-key values if available
+			// 		});
+			// 	} 
+			// 	else 
+			// 	{
+			// 		return false; // no scale found... for some reason
+			// 	}
+			// })
+		});
+	}
+	else
+	{
+		return false;
+	}
 }
 
 function set_octave() 
@@ -298,15 +406,6 @@ function toggle_keyboard()
 			<div id="container">
 				<div id="p-wrapper">
 					<ul id="piano">
-						<div octave="0">
-							<li><div class="anchor" key="C" alt-key="B#"></div></li>
-							<li><div class="anchor" key="D"></div><span key="C#" alt-key="Db"></span></li>
-							<li><div class="anchor" key="E" alt-key="Fb"></div><span key="D#" alt-key="Eb"></span></li>
-							<li><div class="anchor" key="F" alt-key="E#"></div></li>
-							<li><div class="anchor" key="G"></div><span key="F#" alt-key="Gb"></span></li>
-							<li><div class="anchor" key="A"></div><span key="G#" alt-key="Ab"></span></li>
-							<li><div class="anchor" key="B" alt-key="Cb"></div><span key="A#" alt-key="Bb"></span></li>
-						</div>
 					</ul>
 				</div>
 			</div>
@@ -323,7 +422,7 @@ function toggle_keyboard()
 			<div class="large-2 columns">
 				<h5>Key</h5>
 				<select id="key_list" onchange="set_key(); return false;">
-					<option>All</option>
+					<option value="">All</option>
 				</select>
 			</div>
 
@@ -331,10 +430,6 @@ function toggle_keyboard()
 				<h5>Scale</h5>
 				<select id="scale_list" onchange="set_scale(); return false;">
 					<option>None</option>
-					<optgroup id="major" label="Major">
-					</optgroup>
-					<optgroup id="minor" label="Minor">
-					</optgroup>
 				</select>
 			</div>
 			
@@ -376,8 +471,27 @@ function toggle_keyboard()
 		</fieldset>
 	</div>
 
-	<div class="row panel">
-		<div class="large-12 columns">
+	<div class="row">
+ 		<fieldset>
+			<legend>Circle of Fifths</legend>
+			<div class="large-1 columns">
+			<h5>I</h5>
+			</div>
+			<div class="large-1 columns">
+			<h5>II</h5>
+			</div>
+			<div class="large-1 columns">
+			<h5>III</h5>
+			</div>
+			<div class="large-1 columns">
+			<h5>IV</h5>
+			</div>
+			<div class="large-1 columns">
+			<h5>V</h5>
+			</div>
+			<div class="large-7 columns">
+			</div>
+		</fieldset>
 	</div>
 
 <script src="<?php echo site_url('assets'); ?>/js/foundation.min.js"></script>

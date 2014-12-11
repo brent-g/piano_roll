@@ -1,0 +1,28 @@
+:focus {
+	  outline:none !important;
+}
+
+a {
+  color:indigo;
+  text-decoration:none;
+}
+
+a:hover {
+  text-decoration:underline;
+}
+
+.selected {
+	background:#3399FF !important;
+}
+
+span {
+	color:white;
+}
+
+#container {
+	overflow: auto;
+}
+
+fieldset {
+	background-color: #f2f2f2;
+}
