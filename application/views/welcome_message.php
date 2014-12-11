@@ -224,7 +224,7 @@ function click_play(obj_this)
 	$(notes).each(function(k, value)
 	{
 		var selected_key = (value.offset + this_key);
-		console.log(value.offset);
+		//console.log(value.offset);
 		
 		//play_multi_sound(this_index);
 	});
@@ -253,6 +253,7 @@ function get_keys()
 function set_key()
 {
 	selected_key = parseInt($('#key_list').find(":selected").val(), 10);
+	set_scale();
 }
 
 function get_scale()
@@ -274,78 +275,44 @@ function get_scale()
 
 function set_scale()
 {
-
 	var selected_scale = $('#scale_list option:selected').val();
 	// make sure the user actually selects a key
 	if (selected_key != null) 
 	{
-		$('.scale_dot').remove(); // clear all dots before we select a scale
-		
-		//var key_value = ((current_octave * 12) + selected_key);
-		var fresh_scale = new Array();
-		var altered_scale = new Array();
-
+		// clear all dots before we select a scale
+		$('.scale_dot').remove(); 
+		// create a fresh array, straight out of the oven
+		var dot_scale = new Array();
+		// loop over all of our available scales
 		$(scales).each(function(key,value)
 		{
+			// match our selected scale to our available ones
 			if (value.type === selected_scale)
 			{
-				var octave_increment = 0;
-				for (x = 0; x <= piano_octave_count; x++)
+				/*
+				we want to start the octave_increment at a -12 because the scale offsets start at a positive number greater than  0 (C key; which is our lowest key value)
+				since scales after C are always greater than 0, we still want to fill in any notes behind our root note value, therefore we will increment an extra time in
+				our FOR loop to compensate for this (thats why x = -1) 
+				*/
+				var octave_increment = -12;
+				for (x = -1; x <= piano_octave_count; x++)
 				{
-					console.log(octave_increment);
+					// loop over all of our offsets, add our selected key offset values and then stuff them into an array
 					$(value.scale_offset).each(function(key,value)
 					{
-						// create a new scale with the appropriate scale and key offset 
-						fresh_scale[key] = (value + selected_key + octave_increment);
+						// create a new scale with the appropriate scale and key offsets
+						dot_scale.push((value + selected_key) + octave_increment);
 					});
-					altered_scale.push(fresh_scale);
-					octave_increment = octave_increment + 12;
+					// we need to increment 12 notes each iteration in order to process the whole scale
+					octave_increment = octave_increment + 12; 
 				}
-				console.log(altered_scale);
-
-				
-
-
-
-
-
-				// var key_value = 0;
-				// // loop over all of the keys and apply the scale dot where needed!
-				// for (x = 0; x <= piano_octave_count; x++)
-				// {
-				// 	$(altered_scale).each(function(key,value)
-				// 	{
-				// 		 key_value = value;
-				// 		 altered_scale[key] = key_value;
-
-				// 	//console.log(key_value);
-				// 	});
-				// 	key_value = key_value + 12;
-				// 	//console.log('hello!');
-				// 	// $('<div class="scale_dot"></div>').appendTo($('#piano').find("[index|='"+v+"'']"));
-				// }
-				// console.log(key_value);
-
-
-
-
-
 			}
-			// $(value).each(function(key, value)
-			// {
-			// 	if (value.name === selected_scale)
-			// 	{
-			// 		$(value.keys).each(function(k,v) 
-			// 		{
-			// 			//
-			// 			$('#piano').find("[index|='"+v+"']").html('<div class="scale_dot"></div>'); // comma allows us to use either the key or the alt-key values if available
-			// 		});
-			// 	} 
-			// 	else 
-			// 	{
-			// 		return false; // no scale found... for some reason
-			// 	}
-			// })
+			// loop over our dot value and place them on the scale!
+			$(dot_scale).each(function(key, value)
+			{
+				// apply the dots!
+				$('#piano').find("[index|='"+value+"']").html('<div class="scale_dot"></div>'); // comma allows us to use either the key or the alt-key values if available
+			});
 		});
 	}
 	else
@@ -422,7 +389,7 @@ function toggle_keyboard()
 			<div class="large-2 columns">
 				<h5>Key</h5>
 				<select id="key_list" onchange="set_key(); return false;">
-					<option value="">All</option>
+					<option value="">None</option>
 				</select>
 			</div>
 
