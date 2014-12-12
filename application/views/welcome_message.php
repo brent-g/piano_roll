@@ -1,12 +1,4 @@
 <script>
-	// default values
-	var current_octave = 2;
-	var sound_volume = 1;
-	var keyboard_control = true;
-	var piano_key_count = 0;
-	var selected_key = null;
-	var piano_octave_count = 5;
-
 	$(function() 
 	{
 		// generate the piano
@@ -23,6 +15,7 @@
 		get_scale();
 		// enable mouseclick to play notes
 		click_play_init();
+		set_fifths();
 	});	
 
 function piano_init()
@@ -182,7 +175,6 @@ function play_chords(chord_name)
 			var chord = value.chord.slice(0,3);
 			$(chord).each(function(k,val) 
 			{
-				console.log(val);
 				// $(val).each(function(i,note)
 				// {
 				// 	console.log(i,note);
@@ -201,152 +193,61 @@ for (a=0;a<channel_max;a++) {									// prepare the channels
 	audiochannels[a]['finished'] = -1;							// expected end time for this channel
 }
 
-function play_multi_sound(id) {
-	for (a = 0; a < audiochannels.length; a++) {
-		thistime = new Date();
-		if (audiochannels[a]['finished'] < thistime.getTime()) {			// is this channel finished?
-			audiochannels[a]['finished'] = thistime.getTime() + $('#sample_'+id).duration*600;
-			audiochannels[a]['channel'].src = $('#sample_'+id).attr('src');
-			//audiochannels[a]['channel'].load();
-			audiochannels[a]['channel'].volume = sound_volume;
-			audiochannels[a]['channel'].play();
-			break;
-		}
-	}
-}	
-
-function click_play(obj_this)
-{
-	var this_octave = $(obj_this).parents('div').attr('octave');
-	var this_index = $(obj_this).attr('index');
-	var this_key = (this_octave * 12);
-	
-	$(notes).each(function(k, value)
-	{
-		var selected_key = (value.offset + this_key);
-		//console.log(value.offset);
-		
-		//play_multi_sound(this_index);
-	});
-}
-
-
-function get_keys()
-{
-	var key_list = new Array();
-	$(notes).each(function(key,value)
-	{
-		var in_array = $.inArray(value.key,key_list);
-		// add the new key to the list
-		if (in_array === -1)
-		{
-			$('#key_list').append('<option value="'+value.offset+'">'+value.key+'</option');
-			key_list.push(value.key);
-		} 
-		else
-		{
-			return false;
-		}
-	});
-}
-
-function set_key()
-{
-	selected_key = parseInt($('#key_list').find(":selected").val(), 10);
-	set_scale();
-}
-
-function get_scale()
-{
-	$(scales).each(function(key,value)
-	{
-		if (value.type === 'major') 
-		{
-			$('#scale_list').append('<option value="'+value.type+'">'+value.name+'</option');
-
-		} 
-		if (value.type === 'minor')
-		{
-			$('#scale_list').append('<option value="'+value.type+'">'+value.name+'</option');			
-		}
-
-	});
-}
-
-function set_scale()
-{
-	var selected_scale = $('#scale_list option:selected').val();
-	// make sure the user actually selects a key
-	if (selected_key != null) 
-	{
-		// clear all dots before we select a scale
-		$('.scale_dot').remove(); 
-		// create a fresh array, straight out of the oven
-		var dot_scale = new Array();
-		// loop over all of our available scales
-		$(scales).each(function(key,value)
-		{
-			// match our selected scale to our available ones
-			if (value.type === selected_scale)
-			{
-				/*
-				we want to start the octave_increment at a -12 because the scale offsets start at a positive number greater than  0 (C key; which is our lowest key value)
-				since scales after C are always greater than 0, we still want to fill in any notes behind our root note value, therefore we will increment an extra time in
-				our FOR loop to compensate for this (thats why x = -1) 
-				*/
-				var octave_increment = -12;
-				for (x = -1; x <= piano_octave_count; x++)
-				{
-					// loop over all of our offsets, add our selected key offset values and then stuff them into an array
-					$(value.scale_offset).each(function(key,value)
-					{
-						// create a new scale with the appropriate scale and key offsets
-						dot_scale.push((value + selected_key) + octave_increment);
-					});
-					// we need to increment 12 notes each iteration in order to process the whole scale
-					octave_increment = octave_increment + 12; 
-				}
-			}
-			// loop over our dot value and place them on the scale!
-			$(dot_scale).each(function(key, value)
-			{
-				// apply the dots!
-				$('#piano').find("[index|='"+value+"']").html('<div class="scale_dot"></div>'); // comma allows us to use either the key or the alt-key values if available
-			});
-		});
-	}
-	else
-	{
-		return false;
-	}
-}
-
-function set_octave() 
-{
-	// set the octave select list to the default value
-	var octave_list_value = $('#octave_list :selected').index();
-	// set the current octave to the newly selected value
-	current_octave = octave_list_value;
-}
-
 function set_color()
 {
 
 }
 
-function toggle_keyboard()
+function set_fifths()
 {
-	keyboard_control = $('#keyboard_checkbox').is(':checked');
+	var key_selection = parseInt($('#key_list option:selected').val(), 10);
+	var scale_type = $('#scale_list option:selected').val();
+	var offset_scale = new Array();
+	var octave_offset_scale = new Array();
+	var chord_list = new Array();
+	// make sure we have values 
+	
+	//console.log('scale_type',scale_type);
+	//console.log('key_selection', key_selection);
+	$(scales).each(function(key, value)
+	{
+		if (value.type === scale_type)
+		{
+			// create the offset scale!
+			$(value.scale_offset).each(function(key,value)
+			{
+				offset_scale.push(value + key_selection);
+				octave_offset_scale.push(value + key_selection + (current_octave * 12));
+			});
+			// associate the scale values to the corresponding letters
 
-	if (keyboard_control == false)
-	{
-		$('#octave_list').prop('disabled', true);
-	}
-	else
-	{
-		$('#octave_list').prop('disabled', false);
-	}
+			// create the circle of fifths from the offset scale
+			//console.log(offset_scale);
+			// $(offset_scale).each(function(key,value)
+			// {
+			// 	//console.log(value);	
+			// 	if (notes.offset === value)
+			// 	{
+			// 		console.log(notes.key);
+			// 		//chord_list.push(notes.);
+			// 	}	
+			// });
+
+			$(numerals).each(function(key,value)
+			{
+				if (value.type === scale_type)
+				{
+					$(value.numerals).each(function(key,value)
+					{
+						var index = (key + 1);
+						$('#numeral_'+index).text(value);
+					})
+				}
+			});
+		}
+	});
 }
+
 
 </script>
 <body>
@@ -442,21 +343,34 @@ function toggle_keyboard()
  		<fieldset>
 			<legend>Circle of Fifths</legend>
 			<div class="large-1 columns">
-			<h5>I</h5>
+			<h5 id="numeral_1">I</h5>
+			<a href="#" class="button" id="chord_1">-</a>
 			</div>
 			<div class="large-1 columns">
-			<h5>II</h5>
+			<h5 id="numeral_2">II</h5>
+			<a href="#" class="button" id="chord_2">-</a>
 			</div>
 			<div class="large-1 columns">
-			<h5>III</h5>
+			<h5 id="numeral_3">III</h5>
+			<a href="#" class="button" id="chord_3">-</a>
 			</div>
 			<div class="large-1 columns">
-			<h5>IV</h5>
+			<h5 id="numeral_4">IV</h5>
+			<a href="#" class="button" id="chord_4">-</a>
 			</div>
 			<div class="large-1 columns">
-			<h5>V</h5>
+			<h5  id="numeral_5">V</h5>
+			<a href="#" class="button" id="chord_5">-</a>
 			</div>
-			<div class="large-7 columns">
+			<div class="large-1 columns">
+			<h5  id="numeral_6">VI</h5>
+			<a href="#" class="button" id="chord_6">-</a>
+			</div>
+			<div class="large-1 columns">
+			<h5  id="numeral_7">VII</h5>
+			<a href="#" class="button" id="chord_7">-</a>
+			</div>
+			<div class="large-5 columns">
 			</div>
 		</fieldset>
 	</div>
