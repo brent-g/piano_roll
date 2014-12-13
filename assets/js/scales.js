@@ -1,35 +1,45 @@
 var notes = [
-	{'key':'C',		'character':'a', 	'key_code':65,		'offset': 0},
-	{'key':'C#',	'character':'w', 	'key_code':87,		'offset': 1},
-	{'key':'Db',	'character':'w', 	'key_code':87,		'offset': 1},
-	{'key':'D',		'character':'s', 	'key_code':83,  	'offset': 2},
-	{'key':'D#',	'character':'e', 	'key_code':69, 		'offset': 3},
-	{'key':'Eb',	'character':'e', 	'key_code':69, 		'offset': 3},
-	{'key':'E', 	'character':'d', 	'key_code':68, 		'offset': 4},
-	{'key':'Fb',	'character':'d', 	'key_code':68, 		'offset': 4},
-	{'key':'E#',	'character':'f', 	'key_code':70, 		'offset': 5},
-	{'key':'F',		'character':'f', 	'key_code':70,  	'offset': 5},
-	{'key':'F#',	'character':'t', 	'key_code':84, 		'offset': 6},
-	{'key':'Gb',	'character':'t', 	'key_code':84, 		'offset': 6},
-	{'key':'G',		'character':'g', 	'key_code':71,  	'offset': 7},
-	{'key':'G#',	'character':'g', 	'key_code':71, 		'offset': 8},
-	{'key':'Ab',	'character':'y', 	'key_code':89, 		'offset': 8},
-	{'key':'A', 	'character':'h', 	'key_code':72, 		'offset': 9},
-	{'key':'A#',	'character':'u', 	'key_code':85,		'offset': 10},
-	{'key':'Bb',	'character':'u', 	'key_code':85,		'offset': 10},
-	{'key':'B', 	'character':'j', 	'key_code':74, 		'offset': 11},
-	{'key':'Cb',	'character':'j', 	'key_code':74, 		'offset': 11},
-	{'key':'B#',	'character':'k', 	'key_code':75, 		'offset': 12},
-	{'key':'C',		'character':'k', 	'key_code':75, 		'offset': 12},
-	{'key':'C#',	'character':'o', 	'key_code':79,  	'offset': 13},
-	{'key':'Db',	'character':'o', 	'key_code':79,  	'offset': 13},
-	{'key':'D',		'character':'l', 	'key_code':76,   	'offset': 14},
-	{'key':'D#',	'character':'p', 	'key_code':80,   	'offset': 15},
-	{'key':'Eb',	'character':'p', 	'key_code':80,   	'offset': 15},
-	{'key':'E',		'character':';', 	'key_code':186,   	'offset': 16},
-	{'key':'Fb',	'character':';', 	'key_code':186,   	'offset': 16},
-	{'key':'E#',	'character':'\'',	'key_code':222,  	'offset': 17},
-	{'key':'F',		'character':'\'',	'key_code':222,  	'offset': 17}
+	{'key':'C',		'type': 'none',		'character':'a', 	'key_code':65,		'offset': 0},
+	{'key':'C#',	'type': 'sharp',	'character':'w', 	'key_code':87,		'offset': 1},
+	{'key':'Db',	'type': 'flat',		'character':'w', 	'key_code':87,		'offset': 1},
+	{'key':'D',		'type': 'none',		'character':'s', 	'key_code':83,  	'offset': 2},
+	{'key':'D#',	'type': 'sharp',	'character':'e', 	'key_code':69, 		'offset': 3},
+	{'key':'Eb',	'type': 'flat',		'character':'e', 	'key_code':69, 		'offset': 3},
+	{'key':'E', 	'type': 'none',		'character':'d', 	'key_code':68, 		'offset': 4},
+	{'key':'Fb',	'type': 'flat',		'character':'d', 	'key_code':68, 		'offset': 4},
+	{'key':'F',		'type': 'none',		'character':'f', 	'key_code':70,  	'offset': 5},
+	{'key':'E#',	'type': 'sharp',	'character':'f', 	'key_code':70, 		'offset': 5},
+	{'key':'F#',	'type': 'sharp',	'character':'t', 	'key_code':84, 		'offset': 6},
+	{'key':'Gb',	'type': 'flat',		'character':'t', 	'key_code':84, 		'offset': 6},
+	{'key':'G',		'type': 'none',		'character':'g', 	'key_code':71,  	'offset': 7},
+	{'key':'G#',	'type': 'sharp',	'character':'g', 	'key_code':71, 		'offset': 8},
+	{'key':'Ab',	'type': 'flat',		'character':'y', 	'key_code':89, 		'offset': 8},
+	{'key':'A', 	'type': 'none',		'character':'h', 	'key_code':72, 		'offset': 9},
+	{'key':'A#',	'type': 'sharp',	'character':'u', 	'key_code':85,		'offset': 10},
+	{'key':'Bb',	'type': 'flat',		'character':'u', 	'key_code':85,		'offset': 10},
+	{'key':'B', 	'type': 'none',		'character':'j', 	'key_code':74, 		'offset': 11},
+	{'key':'Cb',	'type': 'flat',		'character':'j', 	'key_code':74, 		'offset': 11},
+	{'key':'C',		'type': 'none',		'character':'k', 	'key_code':75, 		'offset': 12},
+	{'key':'B#',	'type': 'sharp',	'character':'k', 	'key_code':75, 		'offset': 12},
+	{'key':'C#',	'type': 'sharp',	'character':'o', 	'key_code':79,  	'offset': 13},
+	{'key':'Db',	'type': 'flat',		'character':'o', 	'key_code':79,  	'offset': 13},
+	{'key':'D',		'type': 'none',		'character':'l', 	'key_code':76,   	'offset': 14},
+	{'key':'D#',	'type': 'sharp',	'character':'p', 	'key_code':80,   	'offset': 15},
+	{'key':'Eb',	'type': 'flat',		'character':'p', 	'key_code':80,   	'offset': 15},
+	{'key':'E',		'type': 'none',		'character':';', 	'key_code':186,   	'offset': 16},
+	{'key':'Fb',	'type': 'flat',		'character':';', 	'key_code':186,   	'offset': 16},
+	{'key':'F',		'type': 'none',		'character':'\'',	'key_code':222,  	'offset': 17},
+	{'key':'E#',	'type': 'sharp',	'character':'\'',	'key_code':222,  	'offset': 17},
+	{'key':'F#',	'type': 'sharp',	'character':'', 	'key_code':null, 	'offset': 18},
+	{'key':'Gb',	'type': 'flat',		'character':'', 	'key_code':null, 	'offset': 18},
+	{'key':'G',		'type': 'none',		'character':'', 	'key_code':null,  	'offset': 19},
+	{'key':'G#',	'type': 'sharp',	'character':'', 	'key_code':null, 	'offset': 20},
+	{'key':'Ab',	'type': 'flat',		'character':'', 	'key_code':null, 	'offset': 20},
+	{'key':'A', 	'type': 'none',		'character':'', 	'key_code':null, 	'offset': 21},
+	{'key':'A#',	'type': 'sharp',	'character':'', 	'key_code':null,	'offset': 22},
+	{'key':'Bb',	'type': 'flat',		'character':'', 	'key_code':null,	'offset': 22},
+	{'key':'B', 	'type': 'none',		'character':'', 	'key_code':null, 	'offset': 23},
+	{'key':'Cb',	'type': 'flat',		'character':'', 	'key_code':null, 	'offset': 23}
 ];
 
 var scales = [
@@ -49,11 +59,11 @@ var chords = [
 ];
 
 var numerals = [
-	{'type':'major','numerals':{1:'I', 2:'II', 3:'III', 4:'IV', 5:'V', 6:'VI', 7:'VII'}},
-	{'type':'minor','numerals':{1:'i', 2:'ii', 3:'iii', 4:'iv', 5:'v', 6:'vi', 7:'vii'}}
+	{'type':'major','numerals':['I','ii','III','IV','V','vi','vii°']},
+	{'type':'minor','numerals':['i','ii°','III','iv','v','VI','VII']}
 ];
 
 var fifths = [
-	{'name': 'Major / Ionian', 		'type':'major','circle':[{1:'major', 2:'minor', 3:'major', 4:'major', 5:'major', 6:'minor', 7:'dim'}]},
-	{'name': 'N. Minor / Aeolian', 	'type':'minor','circle':[{1:'minor', 2:'dim', 3:'major', 4:'minor', 5:'minor', 6:'major', 7:'major'}]}
+	{'name': 'Major / Ionian', 		'type':'major','circle':['major','minor','major','major','major','minor','dim']},
+	{'name': 'N. Minor / Aeolian', 	'type':'minor','circle':['minor','dim','major','minor','minor','major','major']}
 ];

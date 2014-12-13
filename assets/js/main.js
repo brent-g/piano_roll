@@ -26,7 +26,6 @@ function click_play(obj_this)
 	play_multi_sound(this_index);
 }
 
-
 function get_keys()
 {
 	var key_list = new Array();
@@ -36,7 +35,7 @@ function get_keys()
 		// add the new key to the list
 		if (in_array === -1)
 		{
-			$('#key_list').append('<option value="'+value.offset+'">'+value.key+'</option');
+			$('#key_list').append('<option value="'+value.offset+'" type="'+value.type+'">'+value.key+'</option');
 			key_list.push(value.key);
 		} 
 		else

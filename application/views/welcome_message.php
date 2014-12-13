@@ -201,53 +201,99 @@ function set_color()
 function set_fifths()
 {
 	var key_selection = parseInt($('#key_list option:selected').val(), 10);
+	var key_type = $('#key_list option:selected').attr('type');
 	var scale_type = $('#scale_list option:selected').val();
 	var offset_scale = new Array();
 	var octave_offset_scale = new Array();
 	var chord_list = new Array();
-	// make sure we have values 
+	var offset_scale_keys = new Array();
 	
-	//console.log('scale_type',scale_type);
-	//console.log('key_selection', key_selection);
-	$(scales).each(function(key, value)
+	// make sure we have values 
+	if (key_type && scale_type)
 	{
-		if (value.type === scale_type)
+		$(scales).each(function(key, value)
 		{
-			// create the offset scale!
-			$(value.scale_offset).each(function(key,value)
+			if (value.type === scale_type)
 			{
-				offset_scale.push(value + key_selection);
-				octave_offset_scale.push(value + key_selection + (current_octave * 12));
-			});
-			// associate the scale values to the corresponding letters
-
-			// create the circle of fifths from the offset scale
-			//console.log(offset_scale);
-			// $(offset_scale).each(function(key,value)
-			// {
-			// 	//console.log(value);	
-			// 	if (notes.offset === value)
-			// 	{
-			// 		console.log(notes.key);
-			// 		//chord_list.push(notes.);
-			// 	}	
-			// });
-
-			$(numerals).each(function(key,value)
-			{
-				if (value.type === scale_type)
+				// create the offset scale!
+				$(value.scale_offset).each(function(key,value)
 				{
-					$(value.numerals).each(function(key,value)
+					offset_scale.push(value + key_selection);
+					octave_offset_scale.push(value + key_selection + (current_octave * 12));
+				});
+
+				// set the roman numeral values!
+				$(numerals).each(function(key,value)
+				{
+					if (value.type === scale_type)
 					{
-						var index = (key + 1);
-						$('#numeral_'+index).text(value);
-					})
+						$(value.numerals).each(function(key,value)
+						{
+							var index = (key + 1);
+							$('#numeral_'+ index).text(value);
+						});
+					}
+				});
+			}
+		});
+
+		var key_list = {};
+		// if the key_type is non-sharp / non-flat then we need to add a key type preference
+		// this allows us to add sharps to any normal scale 
+		var key_type_pref = 'none';
+		
+		if (key_type == 'none')
+		{
+			key_type_pref = 'sharp';
+		}
+
+		// we loop over our new offset scale
+		$(offset_scale).each(function(k,v)
+		{
+			// then we loop over each note and match up the new offset scale values to the offset values in the notes array
+			$(notes).each(function(key, value)
+			{
+				// match the selected scale type with the key type and match the offset scale value with the note offset
+				if ((value.type == key_type) && v == value.offset)
+				{
+					// make sure this offset value hasn't been added to used key values array
+					if (key_list[value.offset] == null)
+					{
+						// send the key value to a new array for use (this gives us our circle of fifths values)
+						offset_scale_keys.push(value.key);
+						// add this value to the key list
+						key_list[value.offset] = true;
+					}
+				} 
+				// when selecting a non-sharp || non-flat scale we need to make sure to still add any sharps or flats to the offset_scale_keys
+				// to do this we implement a key_type_preference so that if the pref type exists, then we can add this key
+				else if ((value.type == key_type_pref) && v == value.offset)
+				{
+					// make sure this offset value hasn't been added to used key values array
+					if (key_list[value.offset] == null)
+					{
+						// send the key value to a new array for use (this gives us our circle of fifths values)
+						offset_scale_keys.push(value.key);
+						// add this value to the key list
+						key_list[value.offset] = true;
+					}
 				}
 			});
-		}
-	});
-}
+		});
+		
+		// display the offset_scale_keys
+		$(offset_scale_keys).each(function(key,value)
+		{
+			$('#chord_'+(key+1)).text(value);
+		});
+	}
+	else
+	{
+		$("[id^='chord_']").text('-');
+		return false;
+	}
 
+}
 
 </script>
 <body>
@@ -289,15 +335,15 @@ function set_fifths()
 
 			<div class="large-2 columns">
 				<h5>Key</h5>
-				<select id="key_list" onchange="set_key(); return false;">
+				<select id="key_list" onchange="set_key(); set_fifths(); return false;">
 					<option value="">None</option>
 				</select>
 			</div>
 
 			<div class="large-2 columns">
 				<h5>Scale</h5>
-				<select id="scale_list" onchange="set_scale(); return false;">
-					<option>None</option>
+				<select id="scale_list" onchange="set_scale(); set_fifths(); return false;">
+					<option value="">None</option>
 				</select>
 			</div>
 			
@@ -342,36 +388,25 @@ function set_fifths()
 	<div class="row">
  		<fieldset>
 			<legend>Circle of Fifths</legend>
-			<div class="large-1 columns">
-			<h5 id="numeral_1">I</h5>
-			<a href="#" class="button" id="chord_1">-</a>
-			</div>
-			<div class="large-1 columns">
-			<h5 id="numeral_2">II</h5>
-			<a href="#" class="button" id="chord_2">-</a>
-			</div>
-			<div class="large-1 columns">
-			<h5 id="numeral_3">III</h5>
-			<a href="#" class="button" id="chord_3">-</a>
-			</div>
-			<div class="large-1 columns">
-			<h5 id="numeral_4">IV</h5>
-			<a href="#" class="button" id="chord_4">-</a>
-			</div>
-			<div class="large-1 columns">
-			<h5  id="numeral_5">V</h5>
-			<a href="#" class="button" id="chord_5">-</a>
-			</div>
-			<div class="large-1 columns">
-			<h5  id="numeral_6">VI</h5>
-			<a href="#" class="button" id="chord_6">-</a>
-			</div>
-			<div class="large-1 columns">
-			<h5  id="numeral_7">VII</h5>
-			<a href="#" class="button" id="chord_7">-</a>
-			</div>
-			<div class="large-5 columns">
-			</div>
+			<div class="large-12 columns">
+			<ul class="large-block-grid-7 text-center">
+			    <li><h5 id="numeral_1">I</h5></li>
+			    <li><h5 id="numeral_2">II</h5></li>
+			    <li><h5 id="numeral_3">III</h5></li>
+			    <li><h5 id="numeral_4">IV</h5></li>
+			    <li><h5 id="numeral_5">V</h5></li>
+			    <li><h5 id="numeral_6">VI</h5></li>
+			    <li><h5 id="numeral_7">VII</h5></li>
+			</ul>
+			<ul class="button-group even-7">
+			  <li><a href="#" class="button " id="chord_1">-</a></li>
+			  <li><a href="#" class="button" id="chord_2">-</a></li>
+			  <li><a href="#" class="button" id="chord_3">-</a></li>
+			  <li><a href="#" class="button" id="chord_4">-</a></li>
+			  <li><a href="#" class="button" id="chord_5">-</a></li>
+			  <li><a href="#" class="button" id="chord_6">-</a></li>
+			  <li><a href="#" class="button" id="chord_7">-</a></li>
+			</ul>
 		</fieldset>
 	</div>
 
