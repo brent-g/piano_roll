@@ -15,6 +15,14 @@ a:hover {
 	background:#3399FF !important;
 }
 
+.chord_selected {
+	background:#FF6600 !important;
+}
+
+.chord_clicked {
+	background:#732C7B !important;
+}
+
 span {
 	color:white;
 }

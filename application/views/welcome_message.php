@@ -15,45 +15,11 @@
 		get_scale();
 		// enable mouseclick to play notes
 		click_play_init();
+		// show the circle of fifths chords and numerals
 		set_fifths();
+		// enable chord highlighting and click playing
+		chords_init();
 	});	
-
-function piano_init()
-{
-	var octave = 0;
-	// this is where we generate the piano
-	for (x = 0; x <= piano_octave_count; x++) {
-		// a template of 1 octaves worth of keys
-		var template = '<div octave="'+x+'"><li><div class="anchor" index="'+(0+octave)+'"></div></li><li><span index="'+(1+octave)+'"></span><div class="anchor" index="'+(2+octave)+'"></div></li><li><span index="'+(3+octave)+'"></span><div class="anchor" index="'+(4+octave)+'"></div></li><li><div class="anchor" index="'+(5+octave)+'"></div></li><li><span index="'+(6+octave)+'"></span><div class="anchor" index="'+(7+octave)+'"></div></li><li><span index="'+(8+octave)+'"></span><div class="anchor" index="'+(9+octave)+'"></div></li><li><span index="'+(10+octave)+'"></span><div class="anchor" index="'+(11+octave)+'"></div></li></div>';
-		octave = octave + 12;
-		// generate the whole piano and append it to the piano id
-		$('#piano').append(template);
-		piano_key_count = octave;
-	}
-}
-
-function click_play_init()
-{
-	$("#piano div li div, #piano div li span").on("mousedown", function(){click_play(this)}); // click the notes to play them
-}
-
-function load_audio_samples()
-{
-	for(index = 0; index <= piano_key_count; index++)
-	{
-		$('.audio-files').prepend('<audio id="sample_'+index+'" src="<?php echo site_url('assets'); ?>/sound/'+index+'.mp3" preload=\"none\"></audio>');
-	}
-}
-
-function volume_slider_init()
-{
-	// set the sound volume value according to the slider
-	$('.range-slider').on('change', function(){
-		var slider_value = $('.range-slider').attr('data-slider');
-		// set the sound volume value to a number between 0 and 1
-		sound_volume = (slider_value / 100);
-	});
-}
 
 function keyboard_init()
 {
@@ -165,136 +131,6 @@ function keyboard_init()
 	},this);
 }
 
-function play_chords(chord_name)
-{
-	$(chords).each(function(key,value)
-	{
-		if (value.name === chord_name)
-		{
-			// only play the triad chord
-			var chord = value.chord.slice(0,3);
-			$(chord).each(function(k,val) 
-			{
-				// $(val).each(function(i,note)
-				// {
-				// 	console.log(i,note);
-				play_multi_sound(current_octave+val);
-				// });
-			});
-		} 
-	});
-}
-
-var channel_max = 100;
-audiochannels = new Array();
-for (a=0;a<channel_max;a++) {									// prepare the channels
-	audiochannels[a] = new Array();
-	audiochannels[a]['channel'] = new Audio();						// create a new audio object
-	audiochannels[a]['finished'] = -1;							// expected end time for this channel
-}
-
-function set_color()
-{
-
-}
-
-function set_fifths()
-{
-	var key_selection = parseInt($('#key_list option:selected').val(), 10);
-	var key_type = $('#key_list option:selected').attr('type');
-	var scale_type = $('#scale_list option:selected').val();
-	var offset_scale = new Array();
-	var octave_offset_scale = new Array();
-	var chord_list = new Array();
-	var offset_scale_keys = new Array();
-	
-	// make sure we have values 
-	if (key_type && scale_type)
-	{
-		$(scales).each(function(key, value)
-		{
-			if (value.type === scale_type)
-			{
-				// create the offset scale!
-				$(value.scale_offset).each(function(key,value)
-				{
-					offset_scale.push(value + key_selection);
-					octave_offset_scale.push(value + key_selection + (current_octave * 12));
-				});
-
-				// set the roman numeral values!
-				$(numerals).each(function(key,value)
-				{
-					if (value.type === scale_type)
-					{
-						$(value.numerals).each(function(key,value)
-						{
-							var index = (key + 1);
-							$('#numeral_'+ index).text(value);
-						});
-					}
-				});
-			}
-		});
-
-		var key_list = {};
-		// if the key_type is non-sharp / non-flat then we need to add a key type preference
-		// this allows us to add sharps to any normal scale 
-		var key_type_pref = 'none';
-		
-		if (key_type == 'none')
-		{
-			key_type_pref = 'sharp';
-		}
-
-		// we loop over our new offset scale
-		$(offset_scale).each(function(k,v)
-		{
-			// then we loop over each note and match up the new offset scale values to the offset values in the notes array
-			$(notes).each(function(key, value)
-			{
-				// match the selected scale type with the key type and match the offset scale value with the note offset
-				if ((value.type == key_type) && v == value.offset)
-				{
-					// make sure this offset value hasn't been added to used key values array
-					if (key_list[value.offset] == null)
-					{
-						// send the key value to a new array for use (this gives us our circle of fifths values)
-						offset_scale_keys.push(value.key);
-						// add this value to the key list
-						key_list[value.offset] = true;
-					}
-				} 
-				// when selecting a non-sharp || non-flat scale we need to make sure to still add any sharps or flats to the offset_scale_keys
-				// to do this we implement a key_type_preference so that if the pref type exists, then we can add this key
-				else if ((value.type == key_type_pref) && v == value.offset)
-				{
-					// make sure this offset value hasn't been added to used key values array
-					if (key_list[value.offset] == null)
-					{
-						// send the key value to a new array for use (this gives us our circle of fifths values)
-						offset_scale_keys.push(value.key);
-						// add this value to the key list
-						key_list[value.offset] = true;
-					}
-				}
-			});
-		});
-		
-		// display the offset_scale_keys
-		$(offset_scale_keys).each(function(key,value)
-		{
-			$('#chord_'+(key+1)).text(value);
-		});
-	}
-	else
-	{
-		$("[id^='chord_']").text('-');
-		return false;
-	}
-
-}
-
 </script>
 <body>
 	<nav class="top-bar">
@@ -335,14 +171,14 @@ function set_fifths()
 
 			<div class="large-2 columns">
 				<h5>Key</h5>
-				<select id="key_list" onchange="set_key(); set_fifths(); return false;">
+				<select id="key_list" onchange="set_key(); set_fifths(); get_chords(); return false;">
 					<option value="">None</option>
 				</select>
 			</div>
 
 			<div class="large-2 columns">
 				<h5>Scale</h5>
-				<select id="scale_list" onchange="set_scale(); set_fifths(); return false;">
+				<select id="scale_list" onchange="set_scale(); set_fifths(); get_chords(); return false;">
 					<option value="">None</option>
 				</select>
 			</div>
@@ -357,7 +193,7 @@ function set_fifths()
 			
 			<div class="large-2 columns">
 				<h5>Octave</h5>
-				<select id="octave_list" style="width:40px;" onchange="set_octave(); return false;">
+				<select id="octave_list" style="width:40px;" onchange="set_octave(); get_chords(); return false;">
 					<option>0</option>
 					<option>1</option>
 					<option selected>2</option>
@@ -368,7 +204,7 @@ function set_fifths()
 
 			<div class="large-2 columns">
 				<h5>Scale Color</h5>
-				<select id="colour_list"> 
+				<select id="color_list" onchange="set_scale_color();"> 
 					<option value="green">Green</option>
 					<option value="red">Red</option>
 					<option value="blue">Blue</option>
@@ -399,13 +235,13 @@ function set_fifths()
 			    <li><h5 id="numeral_7">VII</h5></li>
 			</ul>
 			<ul class="button-group even-7">
-			  <li><a href="#" class="button " id="chord_1">-</a></li>
-			  <li><a href="#" class="button" id="chord_2">-</a></li>
-			  <li><a href="#" class="button" id="chord_3">-</a></li>
-			  <li><a href="#" class="button" id="chord_4">-</a></li>
-			  <li><a href="#" class="button" id="chord_5">-</a></li>
-			  <li><a href="#" class="button" id="chord_6">-</a></li>
-			  <li><a href="#" class="button" id="chord_7">-</a></li>
+			  <li><a href="#" class="button" id="chord_1" value="0">-</a></li>
+			  <li><a href="#" class="button" id="chord_2" value="1">-</a></li>
+			  <li><a href="#" class="button" id="chord_3" value="2">-</a></li>
+			  <li><a href="#" class="button" id="chord_4" value="3">-</a></li>
+			  <li><a href="#" class="button" id="chord_5" value="4">-</a></li>
+			  <li><a href="#" class="button" id="chord_6" value="5">-</a></li>
+			  <li><a href="#" class="button" id="chord_7" value="6">-</a></li>
 			</ul>
 		</fieldset>
 	</div>

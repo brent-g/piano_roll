@@ -43,8 +43,10 @@ var notes = [
 ];
 
 var scales = [
-	{'name':'Major', 'type':'major', 'scale_offset':[0,2,4,5,7,9,11]},
-	{'name':'Minor', 'type':'minor', 'scale_offset':[0,2,3,5,7,8,10]}
+	{'name':'Major', 		'type':'major', 	'scale_offset':[0,2,4,5,7,9,11]},
+	{'name':'Minor', 		'type':'minor', 	'scale_offset':[0,2,3,5,7,8,10]}
+	// {'name':'Lydian', 		'type':'lydian', 	'scale_offset':[0,2,4,6,7,9,10]},
+	// {'name':'Mixolydian', 	'type':'mixo', 		'scale_offset':[0,2,4,5,7,9,10]}
 ];
 
 var chords = [
@@ -59,11 +61,15 @@ var chords = [
 ];
 
 var numerals = [
-	{'type':'major','numerals':['I','ii','III','IV','V','vi','vii°']},
-	{'type':'minor','numerals':['i','ii°','III','iv','v','VI','VII']}
+	{'type':'major',	'numerals':['I','ii','III','IV','V','vi','vii°']},
+	{'type':'minor',	'numerals':['i','ii°','III','iv','v','VI','VII']}
+	// {'type':'lydian',	'numerals':['I','II','iii','iv°','V','vi','vii']},
+	// {'type':'mixo',		'numerals':['I','ii','iii°','IV','v','vi','VII']}
 ];
 
 var fifths = [
-	{'name': 'Major / Ionian', 		'type':'major','circle':['major','minor','major','major','major','minor','dim']},
-	{'name': 'N. Minor / Aeolian', 	'type':'minor','circle':['minor','dim','major','minor','minor','major','major']}
+	{'name': 'Major / Ionian', 		'type':'major'	,'circle':['major','minor','minor','major','major','minor','dim']},
+	{'name': 'N. Minor / Aeolian', 	'type':'minor'	,'circle':['minor','dim','major','minor','minor','major','major']}
+	// {'name': 'Lydian', 				'type':'lydian'	,'circle':['major','major','minor','dim','major','minor','minor']},
+	// {'name': 'Mixolydian',			'type':'mixo'	,'circle':['major','minor','dim','major','minor','minor','dom7']}
 ];
