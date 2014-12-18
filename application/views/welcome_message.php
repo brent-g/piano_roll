@@ -40,6 +40,8 @@ function keyboard_init()
 						// set the octave list value to the newly changed octave value
 						$('#octave_list').val(current_octave).prop('selected', true);
 						$("#piano li div").removeClass('selected');
+
+						get_chords();
 					} 
 					else 
 					{
@@ -56,6 +58,8 @@ function keyboard_init()
 						// set the octave list value to the newly changed octave value
 						$('#octave_list').val(current_octave).prop('selected', true);
 						$("#piano li div").removeClass('selected');
+
+						get_chords();
 					}
 					else
 					{
