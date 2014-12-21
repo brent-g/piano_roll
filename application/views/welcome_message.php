@@ -20,6 +20,8 @@
 		set_fifths();
 		// enable chord highlighting and click playing
 		chords_init();
+		// center the scroll bar
+		$('#container').scrollLeft(284);
 	});	
 
 function keyboard_init()
