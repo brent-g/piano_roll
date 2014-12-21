@@ -30,7 +30,7 @@ function click_play_init()
 
 function load_audio_samples()
 {
-	for(index = 0; index <= piano_key_count; index++)
+	for (index = 0; index <= piano_key_count; index++)
 	{
 		$('.audio-files').prepend('<audio id="sample_'+index+'" src="assets/sound/'+index+'.mp3" preload=\"auto\"></audio>');
 	}
@@ -213,7 +213,6 @@ function set_fifths()
 					octave_offset_scale.push(value + selected_key + (current_octave * 12));
 				});
 
-
 				// set the roman numeral values!
 				$(numerals).each(function(key,value)
 				{
@@ -221,8 +220,7 @@ function set_fifths()
 					{
 						$(value.numerals).each(function(key,value)
 						{
-							var index = (key + 1);
-							$('#numeral_'+ index).text(value);
+							$('#numeral_'+ key).text(value);
 						});
 					}
 				});
@@ -276,7 +274,7 @@ function set_fifths()
 		// display the offset_scale_keys
 		$(offset_scale_keys).each(function(key,value)
 		{
-			$('#chord_'+(key+1)).text(value);
+			$('#chord_' + key).text(value);
 		});
 	}
 	else

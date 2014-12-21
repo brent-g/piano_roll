@@ -1,4 +1,5 @@
 <script>
+
 	$(function() 
 	{
 		// generate the piano
@@ -24,6 +25,8 @@
 function keyboard_init()
 {
 	var key_down = {}; // prevent multiple executions of play_sound when the user holds down a key
+	var progression = [49,50,51,52,53,54,55];
+
 	$(document).on({
 	    "keydown": function(e) 
 	    { 
@@ -66,24 +69,21 @@ function keyboard_init()
 						return false;
 					}
 				}
-				else if (e.keyCode === 49)
+				else if ($.inArray(e.keyCode, progression) > -1)
 				{
-					// if the user presses any of the fifth values
-					// $(fifths).each(function(k,value) 
-					// {
-					// 	if (e.keyCode === value.key_code) 
-					// 	{
+					var scale_type = $('#scale_list option:selected').val();
+					var key_type = $('#key_list option:selected').attr('type');
 		
-					// 	}
-					// });
-
-				//	if (key_down[49] == null) 
-				//	{
-						var chord_name = 'C-Minor';
-						play_chords(chord_name);
-						key_down[49] = true;
-				//	}
-					
+					if (scale_type && key_type)
+					{
+						var item_index = $.inArray(e.keyCode, progression);
+						if (key_down[e.keyCode] == null) 
+						{
+							$('#chord_' + item_index).mousedown();
+							$('#chord_' + item_index).mouseenter();
+							key_down[e.keyCode] = true;
+						}
+					}
 				}
 				else 
 				{    			
@@ -109,6 +109,7 @@ function keyboard_init()
 			// if the keyboard setting is enabled then we can play the notes
 			if (keyboard_control === true)
 			{
+				// reset all notes
 				$(notes).each(function(k,value) 
 				{
 					if (e.keyCode === value.key_code) 
@@ -120,14 +121,13 @@ function keyboard_init()
 					}
 				});
 
-				$(fifths).each(function(k,value) 
+				// reset 1 - 7 keys 
+				$(progression).each(function(key,value)
 				{
-					if (e.keyCode === value.key_code) 
+					if (e.keyCode === value) 
 					{
-						var note_octave = current_octave + value.octave_diff;
-						$("#piano [octave|="+note_octave+"] li div[key|="+value.key+"]").removeClass('selected');
-						$("#piano [octave|="+note_octave+"] li span[key|="+value.key+"]").removeClass('selected');
-						key_down[value.key_code] = null;
+						$('#chord_' + key).mouseup();
+						key_down[value] = null;
 					}
 				});
 			}
@@ -145,6 +145,7 @@ function keyboard_init()
 		<section class="top-bar-section">
 			<ul class="right">
 				<li><a href="#">Home</a></li>
+				<li><a href="#">Changelog</a></li>
 				<li><a href="#">About</a></li>
 				<li><a href="https://github.com/brent-g/" target="_blank">My GitHub</a></li>
 			</ul>
@@ -166,9 +167,32 @@ function keyboard_init()
 	    </div>
     </div>
 
-    <br />
+	<div class="row">
+ 		<fieldset>
+			<legend>Circle of Fifths</legend>
+			<div class="large-12 columns">
+			<ul class="large-block-grid-7 text-center">
+			    <li><h5 id="numeral_1">I</h5></li>
+			    <li><h5 id="numeral_2">II</h5></li>
+			    <li><h5 id="numeral_3">III</h5></li>
+			    <li><h5 id="numeral_4">IV</h5></li>
+			    <li><h5 id="numeral_5">V</h5></li>
+			    <li><h5 id="numeral_6">VI</h5></li>
+			    <li><h5 id="numeral_7">VII</h5></li>
+			</ul>
+			<ul class="button-group even-7">
+			  <li><a href="#" class="button" id="chord_0" value="0">-</a></li>
+			  <li><a href="#" class="button" id="chord_1" value="1">-</a></li>
+			  <li><a href="#" class="button" id="chord_2" value="2">-</a></li>
+			  <li><a href="#" class="button" id="chord_3" value="3">-</a></li>
+			  <li><a href="#" class="button" id="chord_4" value="4">-</a></li>
+			  <li><a href="#" class="button" id="chord_5" value="5">-</a></li>
+			  <li><a href="#" class="button" id="chord_6" value="6">-</a></li>
+			</ul>
+		</fieldset>
+	</div>
 
-    <div class="row">
+	<div class="row">
 	    <fieldset>
 			
 			<legend>Options</legend>
@@ -222,31 +246,6 @@ function keyboard_init()
 					<span class="range-slider-handle" aria-valuemin="0" aria-valuemax="100" aria-valuenow="44" style="-webkit-transform: translateX(397.64px); transform: translateX(397.64px);"></span>
 				</div>
 			</div>
-		</fieldset>
-	</div>
-
-	<div class="row">
- 		<fieldset>
-			<legend>Circle of Fifths</legend>
-			<div class="large-12 columns">
-			<ul class="large-block-grid-7 text-center">
-			    <li><h5 id="numeral_1">I</h5></li>
-			    <li><h5 id="numeral_2">II</h5></li>
-			    <li><h5 id="numeral_3">III</h5></li>
-			    <li><h5 id="numeral_4">IV</h5></li>
-			    <li><h5 id="numeral_5">V</h5></li>
-			    <li><h5 id="numeral_6">VI</h5></li>
-			    <li><h5 id="numeral_7">VII</h5></li>
-			</ul>
-			<ul class="button-group even-7">
-			  <li><a href="#" class="button" id="chord_1" value="0">-</a></li>
-			  <li><a href="#" class="button" id="chord_2" value="1">-</a></li>
-			  <li><a href="#" class="button" id="chord_3" value="2">-</a></li>
-			  <li><a href="#" class="button" id="chord_4" value="3">-</a></li>
-			  <li><a href="#" class="button" id="chord_5" value="4">-</a></li>
-			  <li><a href="#" class="button" id="chord_6" value="5">-</a></li>
-			  <li><a href="#" class="button" id="chord_7" value="6">-</a></li>
-			</ul>
 		</fieldset>
 	</div>
 
