@@ -80,7 +80,6 @@ function keyboard_init()
 						if (key_down[e.keyCode] == null) 
 						{
 							$('#chord_' + item_index).mousedown();
-							$('#chord_' + item_index).mouseenter();
 							key_down[e.keyCode] = true;
 						}
 					}
