@@ -87,9 +87,17 @@ function set_key()
 
 function get_scale()
 {
+	var disabled = ['melodic','harmonic','lydian','mixo'];
 	$(scales).each(function(key,value)
 	{
-		$('#scale_list').append('<option value="'+value.type+'">'+value.name+'</option');			
+		if ($.inArray(value.type, disabled) > -1)
+		{
+			$('#scale_list').append('<option value="'+value.type+'" disabled>'+value.name+'</option');		
+		}
+		else
+		{
+			$('#scale_list').append('<option value="'+value.type+'">'+value.name+'</option');				
+		}
 	});
 }
 

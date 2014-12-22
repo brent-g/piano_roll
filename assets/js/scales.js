@@ -47,8 +47,8 @@ var scales = [
 	{'name':'Minor', 			'type':'minor', 		'scale_offset':[0,2,3,5,7,8,10]},
 	{'name':'Harmonic Minor', 	'type':'harmonic', 		'scale_offset':[0,2,3,5,7,8,11]},
 	{'name':'Melodic Minor', 	'type':'melodic', 		'scale_offset':[0,2,3,5,7,9,11]},
-	{'name':'Lydian', 			'type':'lydian', 		'scale_offset':[0,2,4,6,7,9,11]}
-	//{'name':'Mixolydian', 	'type':'mixo', 			'scale_offset':[0,2,4,5,7,9,10]}
+	{'name':'Lydian', 			'type':'lydian', 		'scale_offset':[0,2,4,6,7,9,11]},
+	{'name':'Mixolydian', 		'type':'mixo', 			'scale_offset':[0,2,4,5,7,9,10]}
 ];
 
 var chords = [
@@ -64,9 +64,9 @@ var chords = [
 
 var numerals = [
 	{'type':'major',	'numerals':['I','ii','iii','IV','V','vi','vii°']},
-	{'type':'minor',	'numerals':['i','ii°','III','iv','v','VI','VII']},
-	{'type':'harmonic',	'numerals':['i','ii°','III+','iv','V','VI','vii°']},
-	{'type':'lydian',	'numerals':['I','II','iii','iv°','V','vi','vii']}
+	{'type':'minor',	'numerals':['i','ii°','III','iv','v','VI','VII']}
+	//{'type':'harmonic',	'numerals':['i','ii°','III+','iv','V','VI','vii°']},
+	//{'type':'lydian',	'numerals':['I','II','iii','iv°','V','vi','vii']}
 	//{'type':'mixo',		'numerals':['I','ii','iii°','IV','v','vi','VII']}
 ];
 

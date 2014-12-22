@@ -20,8 +20,12 @@
 		set_fifths();
 		// enable chord highlighting and click playing
 		chords_init();
+		// defaults
+		set_key(); set_fifths(); get_chords();
 		// center the scroll bar
 		$('#container').scrollLeft(284);
+		// load some default values
+		//$('#scale_list').val(4).attr('disabled');
 	});	
 
 function keyboard_init()
@@ -201,14 +205,12 @@ function keyboard_init()
 			<div class="large-2 columns">
 				<h5>Key</h5>
 				<select id="key_list" onchange="set_key(); set_fifths(); get_chords(); return false;">
-					<option value="">None</option>
 				</select>
 			</div>
 
 			<div class="large-2 columns">
 				<h5>Scale</h5>
 				<select id="scale_list" onchange="set_scale(); set_fifths(); get_chords(); return false;">
-					<option value="">None</option>
 				</select>
 			</div>
 			
