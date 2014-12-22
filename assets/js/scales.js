@@ -63,7 +63,7 @@ var chords = [
 ];
 
 var numerals = [
-	{'type':'major',	'numerals':['I','ii','III','IV','V','vi','vii°']},
+	{'type':'major',	'numerals':['I','ii','iii','IV','V','vi','vii°']},
 	{'type':'minor',	'numerals':['i','ii°','III','iv','v','VI','VII']},
 	{'type':'harmonic',	'numerals':['i','ii°','III+','iv','V','VI','vii°']},
 	{'type':'lydian',	'numerals':['I','II','iii','iv°','V','vi','vii']}

@@ -173,13 +173,13 @@ function keyboard_init()
 			<legend>Circle of Fifths</legend>
 			<div class="large-12 columns">
 			<ul class="large-block-grid-7 text-center">
-			    <li><h5 id="numeral_1">I</h5></li>
-			    <li><h5 id="numeral_2">II</h5></li>
-			    <li><h5 id="numeral_3">III</h5></li>
-			    <li><h5 id="numeral_4">IV</h5></li>
-			    <li><h5 id="numeral_5">V</h5></li>
-			    <li><h5 id="numeral_6">VI</h5></li>
-			    <li><h5 id="numeral_7">VII</h5></li>
+			    <li><h5 id="numeral_0">I</h5></li>
+			    <li><h5 id="numeral_1">II</h5></li>
+			    <li><h5 id="numeral_2">III</h5></li>
+			    <li><h5 id="numeral_3">IV</h5></li>
+			    <li><h5 id="numeral_4">V</h5></li>
+			    <li><h5 id="numeral_5">VI</h5></li>
+			    <li><h5 id="numeral_6">VII</h5></li>
 			</ul>
 			<ul class="button-group even-7">
 			  <li><a href="#" class="button" id="chord_0" value="0">-</a></li>
