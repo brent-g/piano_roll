@@ -224,7 +224,7 @@ function keyboard_init()
 			
 			<div class="large-2 columns">
 				<h5>Octave</h5>
-				<select id="octave_list" style="width:40px;" onchange="set_octave(); get_chords(); return false;">
+				<select id="octave_list" style="width:50px;" onchange="set_octave(); get_chords(); return false;">
 					<option>0</option>
 					<option>1</option>
 					<option selected>2</option>
