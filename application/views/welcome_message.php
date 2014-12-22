@@ -174,7 +174,7 @@ function keyboard_init()
 
 	<div class="row">
  		<fieldset>
-			<legend>Circle of Fifths</legend>
+			<legend>Chords</legend>
 			<div class="large-12 columns">
 			<ul class="large-block-grid-7 text-center">
 			    <li><h5 id="numeral_0">I</h5></li>
