@@ -174,26 +174,11 @@ function toggle_keyboard()
 }
 
 function play_multi_sound(id) {
-	var channel_max = 20;
-	audiochannels = [];
-	for (a = 0; a < channel_max; a++) {					// prepare the channels
-		audiochannels[a] = [];
-		audiochannels[a]['channel'] = new Audio();		// create a new audio object
-		audiochannels[a]['finished'] = -1;				// expected end time for this channel
-	}
-
-	for (a = 0; a < audiochannels.length; a++) {
-		thistime = new Date();
-		if (audiochannels[a]['finished'] < thistime.getTime()) 
-		{			// is this channel finished?
-			audiochannels[a]['finished'] = thistime.getTime() + $('#sample_'+id).duration*4000;
-			audiochannels[a]['channel'].src = $('#sample_'+id).attr('src');
-			audiochannels[a]['channel'].load();
-			audiochannels[a]['channel'].volume = sound_volume;
-			audiochannels[a]['channel'].play();
-			break;
-		}
-	}
+	// create a new howler audio object
+	var sound = new Howl({
+	  urls: ['assets/sound/' + id + '.mp3'],
+	  volume: sound_volume
+	}).play();
 }
 
 function set_fifths()

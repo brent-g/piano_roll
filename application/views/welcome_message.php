@@ -25,7 +25,6 @@
 		// center the scroll bar
 		$('#container').scrollLeft(284);
 		// load some default values
-		//$('#scale_list').val(4).attr('disabled');
 	});	
 
 function keyboard_init()
