@@ -174,7 +174,7 @@ function toggle_keyboard()
 }
 
 function play_multi_sound(id) {
-	var channel_max = 50;
+	var channel_max = 100;
 	audiochannels = [];
 	for (a = 0; a < channel_max; a++) {					// prepare the channels
 		audiochannels[a] = [];
