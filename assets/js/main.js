@@ -177,7 +177,8 @@ function play_multi_sound(id) {
 	// create a new howler audio object
 	var sound = new Howl({
 	  urls: ['assets/sound/' + id + '.mp3'],
-	  volume: sound_volume
+	  volume: sound_volume,
+	  buffer: true
 	}).play();
 }
 
