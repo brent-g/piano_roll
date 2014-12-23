@@ -174,7 +174,7 @@ function toggle_keyboard()
 }
 
 function play_multi_sound(id) {
-	var channel_max = 100;
+	var channel_max = 20;
 	audiochannels = [];
 	for (a = 0; a < channel_max; a++) {					// prepare the channels
 		audiochannels[a] = [];
@@ -186,7 +186,7 @@ function play_multi_sound(id) {
 		thistime = new Date();
 		if (audiochannels[a]['finished'] < thistime.getTime()) 
 		{			// is this channel finished?
-			audiochannels[a]['finished'] = thistime.getTime() + $('#sample_'+id).duration*4000;
+			audiochannels[a]['finished'] = thistime.getTime() + $('#sample_'+id).duration*3000;
 			audiochannels[a]['channel'].src = $('#sample_'+id).attr('src');
 			audiochannels[a]['channel'].load();
 			audiochannels[a]['channel'].volume = sound_volume;
