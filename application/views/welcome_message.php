@@ -21,7 +21,8 @@
 		// enable chord highlighting and click playing
 		chords_init();
 		// defaults
-		set_key(); set_fifths(); get_chords();
+		set_key(); 
+		get_chords();
 		// center the scroll bar
 		$('#container').scrollLeft(284);
 		// load some default values

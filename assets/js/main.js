@@ -8,6 +8,7 @@ var piano_octave_count = 5;
 var offset_scale = [];
 var offset_chords = [];
 var scale_color = 'green';
+var sound = [];
 
 function piano_init()
 {
@@ -32,7 +33,10 @@ function load_audio_samples()
 {
 	for (index = 0; index <= piano_key_count; index++)
 	{
-		$('.audio-files').prepend('<audio id="sample_'+index+'" src="assets/sound/'+index+'.mp3" preload=\"auto\"></audio>');
+		sound[index] = new Howl({
+	  		urls: ['assets/sound/'+index+'.mp3', 'assets/sound/'+index+'.ogg', 'assets/sound/'+index+'.wav'],
+	  		volume: 1
+		});
 	}
 }
 
@@ -67,15 +71,11 @@ function get_keys()
 	{
 		var in_array = $.inArray(value.key,key_list);
 		// add the new key to the list
-		if (in_array === -1)
+		if (in_array == -1)
 		{
 			$('#key_list').append('<option value="'+value.offset+'" type="'+value.type+'">'+value.key+'</option');
 			key_list.push(value.key);
 		} 
-		else
-		{
-			return false;
-		}
 	});
 }
 
@@ -173,18 +173,16 @@ function toggle_keyboard()
 	}
 }
 
-function play_multi_sound(id) {
-	// create a new howler audio object
-	var sound = new Howl({
-	  urls: ['assets/sound/' + id + '.mp3'],
-	  volume: sound_volume,
-	  buffer: false
-	}).play();
+function play_multi_sound(id) 
+{
+	// play the selected sound
+	sound[id].play();
 }
 
 function set_fifths()
 {
 	var key_type = $('#key_list option:selected').attr('type');
+	var key_value = $('#key_list option:selected').text();
 	var scale_type = $('#scale_list option:selected').val();
 	var octave_offset_scale = [];
 	var offset_scale_keys = [];
@@ -222,14 +220,13 @@ function set_fifths()
 		});
 
 		var key_list = {};
-		// if the key_type is non-sharp / non-flat then we need to add a key type preference
-		// this allows us to add sharps to any normal scale 
-		var key_type_pref = 'none';
-		
-		if (key_type == 'none')
-		{
-			key_type_pref = 'sharp';
-		}
+		var note_list = {};
+		var key_progression = ['C','D','E','F','G','A','B'];
+
+		//console.log(offset_scale);
+
+		// find the starting point in our array based off the selected key
+		var key_index = key_progression.indexOf(key_value.substring(0,1));
 
 		// we loop over our new offset scale
 		$(offset_scale).each(function(k,v)
@@ -237,39 +234,33 @@ function set_fifths()
 			// then we loop over each note and match up the new offset scale values to the offset values in the notes array
 			$(notes).each(function(key, value)
 			{
-				// match the selected scale type with the key type and match the offset scale value with the note offset
-				if ((value.type == key_type) && v == value.offset)
+				if (v == value.offset && key_progression[key_index] == value.key.substring(0,1) && note_list[value.key.substring(0,1)] == null 	&& key_list[value.offset] == null)
 				{
-					// make sure this offset value hasn't been added to used key values array
-					if (key_list[value.offset] == null)
+					// if the key index value ever becomes greater than the length of the progression array then we must reset the value
+					if (key_index >= (key_progression.length - 1))
 					{
-						// send the key value to a new array for use (this gives us our circle of fifths values)
-						offset_scale_keys.push(value.key);
-						// add this value to the key list
-						key_list[value.offset] = true;
+						key_index = -1;
 					}
-				} 
-				// when selecting a non-sharp || non-flat scale we need to make sure to still add any sharps or flats to the offset_scale_keys
-				// to do this we implement a key_type_preference so that if the pref type exists, then we can add this key
-				else if ((value.type == key_type_pref) && v == value.offset)
-				{
-					// make sure this offset value hasn't been added to used key values array
-					if (key_list[value.offset] == null)
+
+					if (key_index <= key_progression.length)
 					{
-						// send the key value to a new array for use (this gives us our circle of fifths values)
 						offset_scale_keys.push(value.key);
-						// add this value to the key list
-						key_list[value.offset] = true;
 					}
+					key_list[value.offset] = true;
+					note_list[value.key.substring(0,1)] = true;
+					key_index++;
 				}
 			});
 		});
-		
+
 		// display the offset_scale_keys
 		$(offset_scale_keys).each(function(key,value)
 		{
 			$('#chord_' + key).text(value);
 		});
+
+		//console.log(offset_scale_keys);
+
 	}
 	else
 	{
