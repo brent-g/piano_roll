@@ -47,7 +47,6 @@ function volume_slider_init()
 		var slider_value = $('.range-slider').attr('data-slider');
 		// set the sound volume value to a number between 0 and 1
 		sound_volume = (slider_value / 100);
-		console.log(sound_volume);
 	});
 }
 
