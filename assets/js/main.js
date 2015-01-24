@@ -35,7 +35,8 @@ function load_audio_samples()
 	{
 		sound[index] = new Howl({
 	  		urls: ['assets/sound/'+index+'.mp3', 'assets/sound/'+index+'.ogg', 'assets/sound/'+index+'.wav'],
-	  		volume: 1
+	  		volume: 1,
+	  		buffer: true
 		});
 	}
 }
