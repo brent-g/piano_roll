@@ -134,6 +134,7 @@ function keyboard_init()
 	},this);
 }
 </script>
+</head>
 <body>
 	<nav class="top-bar">
 		<ul class="title-area">
